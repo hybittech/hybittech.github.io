@@ -140,7 +140,7 @@ scipy >= 1.10
 ### Metode 1 — Development mode (disarankan)
 
 ```bash
-git clone https://github.com/hijaiyyahtech/HOM.git
+git clone https://github.com/hybittech/HOM.git
 cd HOM
 pip install -e ".[dev]"
 ```
@@ -148,7 +148,7 @@ pip install -e ".[dev]"
 ### Metode 2 — Install langsung
 
 ```bash
-git clone https://github.com/hijaiyyahtech/HOM.git
+git clone https://github.com/hybittech/HOM.git
 cd HOM
 pip install .
 ```

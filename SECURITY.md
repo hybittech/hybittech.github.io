@@ -62,7 +62,7 @@ mengeksploitasi kerentanan sebelum diperbaiki.
 
 Jika GitHub Security Advisories tidak tersedia,
 kirim laporan ke alamat email yang tercantum di
-profil organisasi GitHub **hijaiyyahtech**.
+profil organisasi GitHub **hybittech**.
 
 ### Informasi yang Diperlukan
 
@@ -357,7 +357,7 @@ Pelapor kerentanan yang valid akan menerima kredit di:
 | Metode | Detail |
 |---|---|
 | **GitHub Security Advisory** | Tab Security di repository ini |
-| **Email** | Melalui profil organisasi hijaiyyahtech |
+| **Email** | Melalui profil organisasi hybittech |
 
 ### Response Time
 

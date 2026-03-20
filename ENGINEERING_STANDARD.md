@@ -2,7 +2,7 @@
 # **HOM (Hijaiyyah Operating Machine)**
 ## Versi 1.0 — March 2026
 
-### Repository: `github.com/hijaiyyahtech/HOM`
+### Repository: `github.com/hybittech/HOM`
 
 ---
 
@@ -10,7 +10,7 @@
 
 | Field | Nilai |
 |---|---|
-| **Organization** | hijaiyyahtech |
+| **Organization** | hybittech |
 | **Repository** | HOM |
 | **Nama Sistem** | Hijaiyyah Operating Machine |
 | **Fungsi** | Core computational system + GUI engine untuk Matematika Hijaiyyah |
@@ -24,7 +24,7 @@
 ## 2. POSISI DALAM EKOSISTEM
 
 ```text
-GitHub Organization: hijaiyyahtech/
+GitHub Organization: hybittech/
 │
 ├── HOM                        ← repo ini
 │   Core computational system + GUI engine
@@ -770,7 +770,7 @@ Ini harus dipahami seluruh tim:
 git init
 git add .
 git commit -m "[init] HOM core system initialized"
-git remote add origin https://github.com/hijaiyyahtech/HOM.git
+git remote add origin https://github.com/hybittech/HOM.git
 git branch -M main
 git push -u origin main
 ```
@@ -839,7 +839,7 @@ jobs:
 ## 16. RINGKASAN SATU HALAMAN
 
 ### Repo ini:
-- **nama**: `hijaiyyahtech/HOM`
+- **nama**: `hybittech/HOM`
 - **isi**: core system + GUI Matematika Hijaiyyah
 - **layout**: `src/` layout (PEP 517)
 - **entry**: `python -m hijaiyyah`

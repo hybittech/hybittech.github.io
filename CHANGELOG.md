@@ -231,5 +231,5 @@ Copyright:  © 2026 HMCL
 
 ---
 
-[1.0.0]: https://github.com/hijaiyyahtech/HOM/releases/tag/v1.0.0
-[Unreleased]: https://github.com/hijaiyyahtech/HOM/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/hybittech/HOM/releases/tag/v1.0.0
+[Unreleased]: https://github.com/hybittech/HOM/compare/v1.0.0...HEAD

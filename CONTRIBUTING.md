@@ -505,8 +505,8 @@ silakan hubungi maintainer sebelum berkontribusi.
 
 ### Cara menghubungi
 
-- **Issues**: gunakan [GitHub Issues](https://github.com/hijaiyyahtech/HOM/issues)
-- **Diskusi**: gunakan [GitHub Discussions](https://github.com/hijaiyyahtech/HOM/discussions)
+- **Issues**: gunakan [GitHub Issues](https://github.com/hybittech/HOM/issues)
+- **Diskusi**: gunakan [GitHub Discussions](https://github.com/hybittech/HOM/discussions)
   (jika tersedia)
 - **Email**: hubungi melalui profil organisasi GitHub
 
