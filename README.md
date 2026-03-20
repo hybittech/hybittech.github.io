@@ -67,9 +67,9 @@ melalui empat invarian geometri diskret:
 
 | Invarian | Simbol | Deskripsi |
 |---|---|---|
-| **Nuqṭah** | N(h) = (Nₐ, N_b, N_d) | Struktur titik diskret |
-| **Khaṭṭ** | K(h) = (Kₚ, Kₓ, Kₛ, Kₐ, K_c) | Struktur garis |
-| **Qaws** | Q(h) = (Qₚ, Qₓ, Qₛ, Qₐ, Q_c) | Struktur lengkung |
+| **Nuqṭah** | N(h) = (Na, Nb, Nd) | Struktur titik diskret |
+| **Khaṭṭ** | K(h) = (Kₚ, Kₓ, Kₛ, Kₐ, Kc) | Struktur garis |
+| **Qaws** | Q(h) = (Qₚ, Qₓ, Qₛ, Qₐ, Qc) | Struktur lengkung |
 | **Inḥinā'** | Θ̂(h) | Total belokan diskret |
 
 Unit komputasi formal yang dihasilkan disebut **hybit** (*Hijaiyyah Hyperdimensional Bit Integration Technology*).
