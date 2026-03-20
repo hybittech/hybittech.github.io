@@ -1,0 +1,38 @@
+{
+  "release": "HL-18E-v1.0",
+  "dataset": "HM-28-v.1.0-HC18D",
+  "dataset_hash": "f82d385917ffe32ae2b5711409b1341e90934c52172ae9d0fa68888e3b9c51c8",
+  "normaliz_metrics": {
+    "hb_size": 28,
+    "rank": 14,
+    "dimension": 18
+  },
+  "artifacts": {
+    "hb": {
+      "path": "MH-28-v.1.0-HC18D.hb",
+      "hash": "f85251e0daf5bb977a381738accaeb599a05445484158fc158e3ea279902302c",
+      "size": 1036
+    },
+    "hyp": {
+      "path": "MH-28-v.1.0-HC18D.hyp",
+      "hash": "66058f6edc816a70bfcd87ceb71375e27414414c3254c7bcdb2c9fc5d211d13f",
+      "size": 83
+    },
+    "eq": {
+      "path": "MH-28-v.1.0-HC18D.eq",
+      "hash": "cad200bc64bfbe2b38e3ea4d42b25c05912261189ffc2b5c795493007f54c2d1",
+      "size": 120
+    },
+    "lattice": {
+      "path": "MH-28-v.1.0-HC18D.lattice",
+      "hash": "c50a4fe13b01251c316709624ccfa8d96b628fd7cb66e3ac1c89e4d37c1043e4",
+      "size": 22
+    },
+    "bytecode": {
+      "path": "HL-18E-v1.0.bin",
+      "hash": "22b4c14e0f40fe1a7dcda7184ac1285aabc57aa8110599d53afc46d5fa7b47ed",
+      "size": 1544
+    }
+  },
+  "description": "Tooling artifacts for HL-18E v1.0. NOTE: These are mathematical projections, not letter definitions."
+}

@@ -1,0 +1,16 @@
+{
+  "release": "HL-18E-v1.0",
+  "version": "HM-28-v1.0-HC18D",
+  "date": "2026",
+  "author": "Firman Arief Hidayatullah",
+  "components": [
+    "master_table",
+    "hl18e",
+    "hisa",
+    "hcvm",
+    "csgi"
+  ],
+  "sha256": "81af756ba05a47940e45c6d2958c2a6af92eeb8cc4542b344e4a4889435e3af2",
+  "status": "LOCKED_PATENT_RELEASE",
+  "description": "Final patented release of HM-28-v.1.0-HC18D. Hashes are permanently fixed."
+}

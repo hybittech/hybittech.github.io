@@ -1,0 +1,23 @@
+{
+  "include": ["src", "tests", "tools", "hcvm.py"],
+  "extraPaths": ["src"],
+  "pythonVersion": "3.10",
+  "pythonPlatform": "All",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": "warning",
+  "reportMissingModuleSource": "none",
+  "reportOptionalMemberAccess": "warning",
+  "executionEnvironments": [
+    {
+      "root": "src"
+    },
+    {
+      "root": "tools",
+      "extraPaths": ["src"]
+    },
+    {
+      "root": ".",
+      "extraPaths": ["src"]
+    }
+  ]
+}
