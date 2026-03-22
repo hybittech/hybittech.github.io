@@ -35,6 +35,7 @@ from .tabs.hisa_machine import HISAMachineTab
 from .tabs.bytecode import BytecodeTab
 from .tabs.csgi import CSGiTab
 from .tabs.export import ExportTab
+from .tabs.hisab import HISABTab
 from .tabs.release import ReleaseTab
 
 
@@ -88,6 +89,7 @@ class HOMApp:
         HISAMachineTab(nb, self._machine)
         BytecodeTab(nb)
         CSGiTab(nb, self._table)
+        HISABTab(nb, self._table)
         ReleaseTab(nb, self._table, self._root)
 
         self._build_statusbar(main)

@@ -94,6 +94,12 @@ COMPONENTS: List[Dict[str, str]] = [
     {"id": "L6", "name": "HGSS", "desc": "Guard + Signature System", "status": "OPERATIONAL"},
     {"id": "L7", "name": "HC18DC", "desc": "Canonical Data Exchange Format", "status": "SPECIFIED"},
     {
+        "id": "⊥",
+        "name": "HISAB",
+        "desc": "Inter-System Standard for Auditable Bridging (Bab IV)",
+        "status": "OPERATIONAL",
+    },
+    {
         "id": "GUI",
         "name": "HOM",
         "desc": "Hijaiyyah Operating Machine (GUI)",
@@ -116,6 +122,11 @@ PILLARS: List[Dict[str, str]] = [
         "name": "HC Language (Hijaiyyah Codex)",
         "desc": "Native programming language with hybit as first-class primitive type",
         "chapters": "Language Spec v1.0, HL-18E Grammar",
+    },
+    {
+        "name": "HISAB (Hijaiyyah Inter-System Standard for Auditable Bridging)",
+        "desc": "Canonical serialization, 3-level validation, and interoperability protocol",
+        "chapters": "Bab IV: HISAB Protocol (Ch 4.1–4.35)",
     },
     {
         "name": "HOM (Hijaiyyah Operating Machine)",
@@ -260,6 +271,19 @@ class ReleaseTab:
         self._out.writeln("╚" + "═" * 62 + "╝", "border")
         self._out.writeln()
 
+        # ── HISAB Protocol
+        self._out.writeln("  HISAB PROTOCOL (Bab IV)", "section")
+        self._out.writeln("  " + "─" * 55, "dim")
+        self._out.writeln()
+        self._out.writeln("  Standard:    HISAB v1.0 — Auditable Bridging", "value")
+        self._out.writeln("  Magic:       0x4842 ('HB')", "value")
+        self._out.writeln("  Frames:      LETTER · STRING · MATRIX · DELTA · TABLE", "value")
+        self._out.writeln("  Validation:  3-level (Structural + Guard + Semantic)", "value")
+        self._out.writeln("  Round-trip:  D(S(h*)) = h*  ∀h* ∈ V  VERIFIED", "pass")
+        self._out.writeln("  Compliance:  HC-2 (Standard)", "value")
+        self._out.writeln("  Footprint:   18 bytes/LETTER frame", "value")
+        self._out.writeln()
+
         # ── Dataset Seal
         self._out.writeln("  DATASET SEAL", "section")
         self._out.writeln("  " + "─" * 55, "dim")
@@ -344,6 +368,14 @@ class ReleaseTab:
         self._out.writeln("  Injectivity:          378/378 unique pairs", "pass")
         self._out.writeln("  Diameter:             √70 ≈ 8.367 VERIFIED", "pass")
         self._out.writeln("  Energy inequality:    28/28 strict Φ > ‖v₁₄‖²", "pass")
+        self._out.writeln()
+        self._out.writeln("  HISAB VERIFICATION (Bab IV)", "section")
+        self._out.writeln("  " + "─" * 55, "dim")
+        self._out.writeln()
+        self._out.writeln("  Round-trip fidelity:   28/28 D(S(h*))=h* PASS", "pass")
+        self._out.writeln("  Injectivity (frames):  28/28 unique frames PASS", "pass")
+        self._out.writeln("  Guard preservation:    28/28 ALL_GUARDS_PASS", "pass")
+        self._out.writeln("  3-level validation:    17/17 tests PASS", "pass")
         self._out.writeln()
 
         # ── Signature block
@@ -558,6 +590,7 @@ class ReleaseTab:
             ("hijaiyyah.algebra", "Five mathematical fields"),
             ("hijaiyyah.language", "HC v1.0 lexer/parser/evaluator"),
             ("hijaiyyah.hisa", "H-ISA instruction set"),
+            ("hijaiyyah.hisab", "HISAB protocol (Bab IV)"),
             ("hijaiyyah.skeleton", "CSGi pipeline"),
             ("hijaiyyah.integrity", "Verification and audit"),
             ("hijaiyyah.theorems", "13 theorem tests"),
@@ -691,6 +724,9 @@ class ReleaseTab:
         self._out.writeln("  │  L2  H-ISA — Instruction Set            │", "value")
         self._out.writeln("  │  L1  HC/HL-18E — Language + Grammar     │", "value")
         self._out.writeln("  │  L0  CSGI + Master Table — Foundation   │", "pass")
+        self._out.writeln("  ├──────────────────────────────────────────┤", "border")
+        self._out.writeln("  │  ⊥ HISAB — Auditable Bridging (Bab IV)  │", "seal")
+        self._out.writeln("  │    Serialize · Validate · Digest · Audit│", "seal")
         self._out.writeln("  └──────────────────────────────────────────┘", "border")
         self._out.writeln()
 

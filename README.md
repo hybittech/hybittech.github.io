@@ -10,7 +10,7 @@
 [![Release](https://img.shields.io/badge/Release-HM--28--v1.0--HC18D-blue)]()
 [![Python](https://img.shields.io/badge/Python-3.11+-green)]()
 [![License](https://img.shields.io/badge/License-Proprietary-red)]()
-[![Tests](https://img.shields.io/badge/Tests-13%2F13%20PASS-brightgreen)]()
+[![Tests](https://img.shields.io/badge/Tests-30%2B%20PASS-brightgreen)]()
 [![Dataset](https://img.shields.io/badge/Dataset-28×18%20SEALED-orange)]()
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/hybittech/HOM)
 [![Run on Replit](https://replit.com/badge/github/hybittech/HOM)](https://replit.com/github/hybittech/HOM)
@@ -53,6 +53,7 @@
 - **bahasa pemrograman HC** (Hijaiyyah Codex),
 - **mesin virtual HCVM**,
 - **arsitektur instruksi H-ISA**,
+- **standar pertukaran HISAB** (Hijaiyyah Inter-System Standard for Auditable Bridging),
 - **prosesor graf skeleton CSGI**,
 - **sistem audit dan verifikasi formal**,
 - dan **GUI ilmiah terpadu**.
@@ -101,10 +102,18 @@ Unit komputasi formal yang dihasilkan disebut **hybit** (*Hijaiyyah Hyperdimensi
 - **H-ISA** — arsitektur instruksi virtual
 - **Bytecode Inspector** — dekoder instruksi real-time
 
+### 📡 HISAB — Standar Pertukaran Codex (Bab IV)
+- **Serialisasi kanonik** — LETTER Frame (nibble-packed 9 byte), STRING Frame (word-packed 36 byte), MATRIX Frame (25 byte)
+- **Validasi 3-level** — Structural (magic/CRC), Guard (G1–G4/T1–T2), Semantic (Master Table cross-ref)
+- **Round-trip fidelity** — D(S(h*)) = h* untuk semua 28 huruf (Teorema 4.23.1)
+- **Deteksi korupsi ganda** — CRC32 + guard (~2.3× redundansi per korupsi)
+- **Footprint minimal** — 18 byte per LETTER Frame
+
 ### 🔍 Verifikasi dan Audit
 - **Injectivity Verifier** — 378 pasangan unik
 - **Mod-4 Gate** — teorema topologis
 - **Exomatrix R1–R5** — 140 audit checks
+- **HISAB Validation** — 3-level pipeline per frame
 - **Release Seal** — integritas SHA-256
 
 ### 🖥️ GUI Ilmiah
@@ -113,6 +122,7 @@ Unit komputasi formal yang dihasilkan disebut **hybit** (*Hijaiyyah Hyperdimensi
 - **Five Fields Workbench** — panel analitik Bab II
 - **Codex Geometry** — jarak, nearest neighbors, Gram matrix
 - **CSGI Processor** — pipeline bentuk → skeleton → graf
+- **HISAB Explorer** — frame encoder, validation pipeline, corruption detector, round-trip test
 - **Audit Console** — dashboard integritas formal
 - **Release Console** — identitas rilis dan copyright
 
@@ -222,6 +232,7 @@ HOM/
 │       ├── algebra/           ← Bab II: 5 bidang matematika
 │       ├── language/          ← L1: HC language core
 │       ├── hisa/              ← L2: instruction set
+│       ├── hisab/             ← HISAB protocol (Bab IV)
 │       ├── skeleton/          ← CSGI pipeline
 │       ├── integrity/         ← audit & verification
 │       ├── theorems/          ← theorem engine
@@ -256,13 +267,15 @@ HOM/
 ```
 ┌─────────────────────────────────────────────────────┐
 │                    HOM GUI                           │
-│   Letter · Theorems · String · Audit · Geometry     │
-│   Five Fields · HC IDE · HCVM · H-ISA · CSGI       │
+│  Letter · String · Audit · Geometry · HISAB         │
+│  Five Fields · HC IDE · HCVM · H-ISA · CSGI        │
 ├─────────────────────────────────────────────────────┤
 │              HC Language + Evaluator                 │
-├─────────────────────────────────────────────────────┤
-│     Algebra: Vect · Diff · Intg · Geom · Exo       │
-├─────────────────────────────────────────────────────┤
+├───────────────────────┬─────────────────────────────┤
+│  Algebra: 5 Fields    │  HISAB Protocol (Bab IV)    │
+│  Vect·Diff·Intg·Geom  │  Serialize · Validate       │
+│  ·Exo                 │  Digest · Audit · Bridge    │
+├───────────────────────┴─────────────────────────────┤
 │  Integrity · Theorems · Crypto · Release · Net      │
 ├─────────────────────────────────────────────────────┤
 │      H-ISA Machine    │    HCVM Runtime             │
@@ -301,10 +314,11 @@ HOM/
 | **L4** | HCPU | DESIGNED | Arsitektur prosesor 18D |
 | **L5** | HCVM | OPERATIONAL | Codex Virtual Machine |
 | **L6** | HGSS | OPERATIONAL | Guard + Signature System |
-| **L7** | HC18DC | SPECIFIED | Canonical Data Exchange |
+| **L7** | HC18DC | SPECIFIED | Canonical Data Exchange Format |
+| **⟂** | **HISAB** | **OPERATIONAL** | **Inter-System Standard for Auditable Bridging (Bab IV)** |
 | **GUI** | HOM | OPERATIONAL | Integrated Scientific Environment |
 
-**Status agregat:** 6/11 komponen operasional
+**Status agregat:** 7/12 komponen operasional
 
 ---
 
@@ -321,6 +335,9 @@ Rilis ini telah melewati verifikasi formal berikut:
 | Diameter | **√70 ≈ 8.367 VERIFIED** |
 | Energy inequality | **28/28 strict Φ > ‖v₁₄‖²** |
 | Global sum Θ̂ | **91 = 52 + 39 VERIFIED** |
+| HISAB round-trip fidelity | **28/28 D(S(h*))=h* VERIFIED** |
+| HISAB injectivity | **28/28 unique frames** |
+| HISAB guard preservation | **28/28 ALL_GUARDS_PASS** |
 
 ---
 
@@ -338,6 +355,7 @@ pytest
 pytest tests/test_core/test_master_table.py
 pytest tests/test_algebra/test_vectronometry.py
 pytest tests/test_theorems/test_full_suite.py
+pytest tests/test_hisab/test_hisab.py
 ```
 
 ### Menjalankan dengan coverage
@@ -355,6 +373,7 @@ pytest --cov=hijaiyyah --cov-report=html
 | `language/lexer` | tokenisasi dasar, literal Hijaiyyah |
 | `integrity/` | injectivity, seal |
 | `theorems/` | full suite 13 tes |
+| `hisab/` | round-trip, injectivity, guard, 3-level validation, corruption |
 
 ---
 
@@ -437,6 +456,7 @@ fn main() {
 | Spesifikasi H-ISA | [`docs/hisa_spec.md`](docs/hisa_spec.md) |
 | Spesifikasi CSGI | [`docs/csgi_spec.md`](docs/csgi_spec.md) |
 | Spesifikasi HCVM | [`docs/hcvm_spec.md`](docs/hcvm_spec.md) |
+| **Spesifikasi HISAB** | **Bab IV — Serialisasi, Validasi, Interoperabilitas** |
 | Kebijakan rilis | [`docs/release_policy.md`](docs/release_policy.md) |
 | Changelog | [`CHANGELOG.md`](CHANGELOG.md) |
 
@@ -445,25 +465,33 @@ fn main() {
 ## Release Certificate
 
 ```
-╔══════════════════════════════════════════════════════════╗
-║     HIJAIYYAH MATHEMATICS — RELEASE CERTIFICATE         ║
-╠══════════════════════════════════════════════════════════╣
-║                                                          ║
-║     Release:    HM-28-v1.0-HC18D-B84D025                ║
-║     Version:    1.0.0                                    ║
-║     Date:       2026                                     ║
-║     Status:     VERIFIED & SEALED                        ║
-║                                                          ║
-║     Dataset:    28 letters × 18 dimensions               ║
-║     ROM:        252 bytes (nibble-packed)                 ║
-║                                                          ║
-║     SHA-256:                                             ║
-║     f82d385917ffe32ae2b5711409b1341e90934c52172a          ║
-║     e9d0fa68888e3b9c51c8                                 ║
-║                                                          ║
-║     Integrity:  SEALED                                   ║
-║                                                          ║
-╚══════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════════╗
+║     HIJAIYYAH MATHEMATICS — RELEASE CERTIFICATE             ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║     Release:    HM-28-v1.0-HC18D-B84D025                    ║
+║     Version:    1.0.0                                        ║
+║     Date:       2026                                         ║
+║     Status:     VERIFIED & SEALED                            ║
+║                                                              ║
+║     Dataset:    28 letters × 18 dimensions                   ║
+║     ROM:        252 bytes (nibble-packed)                     ║
+║                                                              ║
+║     SHA-256:                                                 ║
+║     f82d385917ffe32ae2b5711409b1341e90934c52172a              ║
+║     e9d0fa68888e3b9c51c8                                     ║
+║                                                              ║
+║     Integrity:  SEALED                                       ║
+║                                                              ║
+║  ── HISAB Protocol (Bab IV) ─────────────────────────────    ║
+║     Standard:   HISAB v1.0 — Auditable Bridging              ║
+║     Magic:      0x4842 ("HB")                                ║
+║     Frames:     LETTER · STRING · MATRIX · DELTA · TABLE     ║
+║     Validation: 3-level (Structural + Guard + Semantic)       ║
+║     Round-trip:  D(S(h*)) = h* ∀h* ∈ V  VERIFIED            ║
+║     Compliance: HC-2 (Standard)                              ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
 ```
 
 ---
@@ -518,10 +546,11 @@ Lihat [`LICENSE`](LICENSE) untuk detail lengkap.
 
 ### Matematika Hijaiyyah
 
-**Fondasi Formal · Codex Teknologi · Arsitektur Hybit**
+**Fondasi Formal · Codex Teknologi · Arsitektur Hybit · HISAB Protocol**
 
 ```
 bit ⊕ qubit ⊕ hybit = ekosistem komputasi lengkap
+ASCII : bit  =  HISAB : hybit
 ```
 
 ---

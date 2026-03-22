@@ -105,6 +105,13 @@ dan proyek ini menggunakan [Semantic Versioning](https://semver.org/spec/v2.0.0.
 - Manifest JSON export
 - Canonical digest (JCS + NFC + SHA-256) spesifikasi awal
 
+#### Protokol HISAB (Bab IV)
+- Canonical Serialization untuk codex 18D
+- Tiga format frame: LETTER (nibble-packed 9 byte), STRING (word-packed 36 byte), MATRIX (25 byte)
+- Validasi intrinsik 3-level: Structural (magic/CRC), Guard (geometric constraints), Semantic (dataset cross-ref)
+- Deteksi korupsi frame multi-layer 
+- Round-trip fidelity dan injectivity verification untuk seluruh 28 huruf
+
 #### CSGI Pipeline
 - Zhang-Suen thinning (skeletonizer)
 - Skeleton graph contractor
@@ -152,6 +159,7 @@ dan proyek ini menggunakan [Semantic Versioning](https://semver.org/spec/v2.0.0.
 - Bytecode Inspector: real-time decoder dengan validasi
 - HCVM Console: standalone VM execution
 - CSGI Processor: pipeline interaktif
+- HISAB Explorer: frame encoder, validation pipeline, corruption detector, round-trip test
 - Export: JSON/CSV/manifest
 - Release Console: 5 subtabs
   (Overview/Manifest/Certificate/Legal/Sync Log)
@@ -184,6 +192,7 @@ dan proyek ini menggunakan [Semantic Versioning](https://semver.org/spec/v2.0.0.
 | Diameter | √70 ≈ 8.367 VERIFIED |
 | Energy inequality | 28/28 strict Φ > ‖v₁₄‖² |
 | Global Σ Θ̂ | 91 = 52 + 39 VERIFIED |
+| HISAB fidelity | 28/28 D(S(h*))=h* VERIFIED |
 
 ---
 
