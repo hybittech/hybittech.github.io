@@ -466,16 +466,16 @@ fn main() {
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║     HIJAIYYAH MATHEMATICS — RELEASE CERTIFICATE             ║
+║     HIJAIYYAH MATHEMATICS — RELEASE CERTIFICATE              ║
 ╠══════════════════════════════════════════════════════════════╣
 ║                                                              ║
-║     Release:    HM-28-v1.0-HC18D-B84D025                    ║
+║     Release:    HM-28-v1.0-HC18D-B84D025                     ║
 ║     Version:    1.0.0                                        ║
 ║     Date:       2026                                         ║
 ║     Status:     VERIFIED & SEALED                            ║
 ║                                                              ║
 ║     Dataset:    28 letters × 18 dimensions                   ║
-║     ROM:        252 bytes (nibble-packed)                     ║
+║     ROM:        252 bytes (nibble-packed)                    ║
 ║                                                              ║
 ║     SHA-256:                                                 ║
 ║     f82d385917ffe32ae2b5711409b1341e90934c52172a              ║
@@ -483,12 +483,12 @@ fn main() {
 ║                                                              ║
 ║     Integrity:  SEALED                                       ║
 ║                                                              ║
-║  ── HISAB Protocol (Bab IV) ─────────────────────────────    ║
+║  ── HISAB Protocol (Bab IV) ───────────────────────────────  ║
 ║     Standard:   HISAB v1.0 — Auditable Bridging              ║
 ║     Magic:      0x4842 ("HB")                                ║
 ║     Frames:     LETTER · STRING · MATRIX · DELTA · TABLE     ║
-║     Validation: 3-level (Structural + Guard + Semantic)       ║
-║     Round-trip:  D(S(h*)) = h* ∀h* ∈ V  VERIFIED            ║
+║     Validation: 3-level (Structural + Guard + Semantic)      ║
+║     Round-trip: D(S(h*)) = h* ∀h* ∈ V  VERIFIED              ║
 ║     Compliance: HC-2 (Standard)                              ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
