@@ -96,7 +96,7 @@ COMPONENTS: List[Dict[str, str]] = [
     {
         "id": "⊥",
         "name": "HISAB",
-        "desc": "Inter-System Standard for Auditable Bridging (Bab IV)",
+        "desc": "Inter-System Standard for Auditable Bridging",
         "status": "OPERATIONAL",
     },
     {
@@ -126,7 +126,7 @@ PILLARS: List[Dict[str, str]] = [
     {
         "name": "HISAB (Hijaiyyah Inter-System Standard for Auditable Bridging)",
         "desc": "Canonical serialization, 3-level validation, and interoperability protocol",
-        "chapters": "Bab IV: HISAB Protocol (Ch 4.1–4.35)",
+        "chapters": ": HISAB Protocol (Ch 4.1–4.35)",
     },
     {
         "name": "HOM (Hijaiyyah Operating Machine)",
@@ -369,7 +369,7 @@ class ReleaseTab:
         self._out.writeln("  Diameter:             √70 ≈ 8.367 VERIFIED", "pass")
         self._out.writeln("  Energy inequality:    28/28 strict Φ > ‖v₁₄‖²", "pass")
         self._out.writeln()
-        self._out.writeln("  HISAB VERIFICATION (Bab IV)", "section")
+        self._out.writeln("  HISAB VERIFICATION", "section")
         self._out.writeln("  " + "─" * 55, "dim")
         self._out.writeln()
         self._out.writeln("  Round-trip fidelity:   28/28 D(S(h*))=h* PASS", "pass")
@@ -590,7 +590,7 @@ class ReleaseTab:
             ("hijaiyyah.algebra", "Five mathematical fields"),
             ("hijaiyyah.language", "HC v1.0 lexer/parser/evaluator"),
             ("hijaiyyah.hisa", "H-ISA instruction set"),
-            ("hijaiyyah.hisab", "HISAB protocol (Bab IV)"),
+            ("hijaiyyah.hisab", "HISAB protocol"),
             ("hijaiyyah.skeleton", "CSGi pipeline"),
             ("hijaiyyah.integrity", "Verification and audit"),
             ("hijaiyyah.theorems", "13 theorem tests"),
@@ -725,7 +725,7 @@ class ReleaseTab:
         self._out.writeln("  │  L1  HC/HL-18E — Language + Grammar     │", "value")
         self._out.writeln("  │  L0  CSGI + Master Table — Foundation   │", "pass")
         self._out.writeln("  ├──────────────────────────────────────────┤", "border")
-        self._out.writeln("  │  ⊥ HISAB — Auditable Bridging (Bab IV)  │", "seal")
+        self._out.writeln("  │  ⊥ HISAB — Auditable Bridging  │", "seal")
         self._out.writeln("  │    Serialize · Validate · Digest · Audit│", "seal")
         self._out.writeln("  └──────────────────────────────────────────┘", "border")
         self._out.writeln()

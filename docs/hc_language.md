@@ -1338,7 +1338,7 @@ HC v1.0 menyediakan diagnostik dasar:
 | Bab I | Fondasi Formal Matematika Hijaiyyah |
 | Bab II | Lima Bidang Matematika Hijaiyyah |
 | Bab III | Hybit dan Arsitektur Fotonik |
-| Bab IV | Hijaiyyah Technology Stack v1.0 |
+| | Hijaiyyah Technology Stack v1.0 |
 | Bab V | Hybit: Unit Komputasi dan Ekosistem |
 | `docs/architecture.md` | Arsitektur HOM |
 | `docs/hisa_spec.md` | Spesifikasi H-ISA |

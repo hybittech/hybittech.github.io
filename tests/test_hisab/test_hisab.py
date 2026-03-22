@@ -1,4 +1,4 @@
-"""Tests for the HISAB protocol (Bab IV)."""
+"""Tests for the HISAB protocol."""
 
 import struct
 import pytest

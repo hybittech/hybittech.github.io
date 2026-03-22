@@ -1,7 +1,7 @@
 """
 Tab: HISAB Protocol Explorer.
 
-Interactive GUI for the HISAB protocol (Bab IV):
+Interactive GUI for the HISAB protocol:
   Panel 1 — Frame Encoder: serialize letters/strings to HISAB frames
   Panel 2 — Validation Pipeline: 3-level validation with step-by-step results
   Panel 3 — Corruption Detector: inject mutations and observe multi-failure detection
@@ -38,7 +38,7 @@ from ..widgets import OutputWriter, make_text
 
 
 class HISABTab:
-    """Tab: HISAB Protocol Explorer (Bab IV)."""
+    """Tab: HISAB Protocol Explorer."""
 
     def __init__(self, notebook: ttk.Notebook, table: MasterTable) -> None:
         self._table = table
@@ -81,7 +81,7 @@ class HISABTab:
 
         tk.Label(
             title_bar,
-            text="Bab IV  │  Serialisasi Kanonik • Validasi Intrinsik • Interoperabilitas",
+            text="  │  Serialisasi Kanonik • Validasi Intrinsik • Interoperabilitas",
             font=("Consolas", 9),
             fg=THEME.dim_fg,
             bg=THEME.surface,

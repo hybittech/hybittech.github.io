@@ -1,7 +1,7 @@
 """
 HISAB Protocol — Frame types, constants, and data structures.
 
-Implements §4.5–4.9 of Bab IV:
+Implements §4.5–4.9 of:
   - Magic bytes, version, frame types
   - HisabFrame dataclass
   - Guard status bitmask

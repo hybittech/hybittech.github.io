@@ -1193,7 +1193,7 @@ H-ISA Spec
 |---|---|
 | Bab I | Fondasi Formal Matematika Hijaiyyah |
 | Bab II | Lima Bidang Matematika Hijaiyyah |
-| Bab IV | Hijaiyyah Technology Stack v1.0 |
+| | Hijaiyyah Technology Stack v1.0 |
 | `docs/architecture.md` | Arsitektur HOM |
 | `docs/hc_language.md` | Spesifikasi HC Language |
 | `docs/hcvm_spec.md` | Spesifikasi HCVM |

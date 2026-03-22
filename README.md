@@ -102,7 +102,7 @@ Unit komputasi formal yang dihasilkan disebut **hybit** (*Hijaiyyah Hyperdimensi
 - **H-ISA** — arsitektur instruksi virtual
 - **Bytecode Inspector** — dekoder instruksi real-time
 
-### 📡 HISAB — Standar Pertukaran Codex (Bab IV)
+### 📡 HISAB — Standar Pertukaran Codex
 - **Serialisasi kanonik** — LETTER Frame (nibble-packed 9 byte), STRING Frame (word-packed 36 byte), MATRIX Frame (25 byte)
 - **Validasi 3-level** — Structural (magic/CRC), Guard (G1–G4/T1–T2), Semantic (Master Table cross-ref)
 - **Round-trip fidelity** — D(S(h*)) = h* untuk semua 28 huruf (Teorema 4.23.1)
@@ -232,7 +232,7 @@ HOM/
 │       ├── algebra/           ← Bab II: 5 bidang matematika
 │       ├── language/          ← L1: HC language core
 │       ├── hisa/              ← L2: instruction set
-│       ├── hisab/             ← HISAB protocol (Bab IV)
+│       ├── hisab/             ← HISAB protocol
 │       ├── skeleton/          ← CSGI pipeline
 │       ├── integrity/         ← audit & verification
 │       ├── theorems/          ← theorem engine
@@ -272,7 +272,7 @@ HOM/
 ├─────────────────────────────────────────────────────┤
 │              HC Language + Evaluator                 │
 ├───────────────────────┬─────────────────────────────┤
-│  Algebra: 5 Fields    │  HISAB Protocol (Bab IV)    │
+│  Algebra: 5 Fields    │  HISAB Protocol    │
 │  Vect·Diff·Intg·Geom  │  Serialize · Validate       │
 │  ·Exo                 │  Digest · Audit · Bridge    │
 ├───────────────────────┴─────────────────────────────┤
@@ -315,7 +315,7 @@ HOM/
 | **L5** | HCVM | OPERATIONAL | Codex Virtual Machine |
 | **L6** | HGSS | OPERATIONAL | Guard + Signature System |
 | **L7** | HC18DC | SPECIFIED | Canonical Data Exchange Format |
-| **⟂** | **HISAB** | **OPERATIONAL** | **Inter-System Standard for Auditable Bridging (Bab IV)** |
+| **⟂** | **HISAB** | **OPERATIONAL** | **Inter-System Standard for Auditable Bridging** |
 | **GUI** | HOM | OPERATIONAL | Integrated Scientific Environment |
 
 **Status agregat:** 7/12 komponen operasional
@@ -456,7 +456,7 @@ fn main() {
 | Spesifikasi H-ISA | [`docs/hisa_spec.md`](docs/hisa_spec.md) |
 | Spesifikasi CSGI | [`docs/csgi_spec.md`](docs/csgi_spec.md) |
 | Spesifikasi HCVM | [`docs/hcvm_spec.md`](docs/hcvm_spec.md) |
-| **Spesifikasi HISAB** | **Bab IV — Serialisasi, Validasi, Interoperabilitas** |
+| **Spesifikasi HISAB** | ** — Serialisasi, Validasi, Interoperabilitas** |
 | Kebijakan rilis | [`docs/release_policy.md`](docs/release_policy.md) |
 | Changelog | [`CHANGELOG.md`](CHANGELOG.md) |
 

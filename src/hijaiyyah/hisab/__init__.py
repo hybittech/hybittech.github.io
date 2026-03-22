@@ -1,7 +1,7 @@
 """
 HISAB — Hijaiyyah Inter-System Standard for Auditable Bridging.
 
-Public API for the HISAB protocol (Bab IV).
+Public API for the HISAB protocol.
 """
 
 from .protocol import (

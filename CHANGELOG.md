@@ -105,7 +105,7 @@ dan proyek ini menggunakan [Semantic Versioning](https://semver.org/spec/v2.0.0.
 - Manifest JSON export
 - Canonical digest (JCS + NFC + SHA-256) spesifikasi awal
 
-#### Protokol HISAB (Bab IV)
+#### Protokol HISAB
 - Canonical Serialization untuk codex 18D
 - Tiga format frame: LETTER (nibble-packed 9 byte), STRING (word-packed 36 byte), MATRIX (25 byte)
 - Validasi intrinsik 3-level: Structural (magic/CRC), Guard (geometric constraints), Semantic (dataset cross-ref)
