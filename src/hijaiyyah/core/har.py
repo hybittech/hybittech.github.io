@@ -80,7 +80,7 @@ class HARRegistry:
     HISAB Alphabet Registry manager.
 
     Generates HAR-001 (Hijaiyyah) from the sealed Master Table.
-    Multi-alphabet by design — framework supports HAR-002+.
+    Rigidly restricted to strictly scriptural kanonik alphabets.
     """
 
     def __init__(self) -> None:

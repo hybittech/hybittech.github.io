@@ -22,7 +22,6 @@ har/
 │   │   └── rank_analysis.json
 │   ├── glyphs/*.hgeo
 │   └── certificate.json
-└── HAR-002/            ← Latin Uppercase (PENDING)
 ```
 
 ## Status Levels

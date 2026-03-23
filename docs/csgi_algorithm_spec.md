@@ -1,6 +1,6 @@
 <div align="center">
 
-# **Spesifikasi Algoritma CSGI & Sertifikasi HAR-002**
+# **Spesifikasi Algoritma CSGI**
 ## Zhang-Suen, Q90, dan Klasifikasi MainPath
 
 **HM-28-v1.0-HC18D · 2026**
@@ -638,7 +638,7 @@ def guard_check(v: List[int]) -> Tuple[bool, List[str]]:
 
 ---
 
-## BAGIAN 6 — Protokol Sertifikasi HAR-002
+## BAGIAN 6 — Protokol Sertifikasi HAR
 
 ### 6.1 Checklist Sertifikasi Latin Uppercase
 
@@ -676,11 +676,11 @@ def guard_check(v: List[int]) -> Tuple[bool, List[str]]:
 | S7 | `dim ker(M⊤)` | — | TODO |
 | S7 | Diameter alfabet Latin | `d2` max | TODO |
 | Release | Master Table sealed | SHA-256 | TODO |
-| Release | Certificate HAR-002 | — | TODO |
+| Release | Certificate HAR | — | TODO |
 
 ### 6.2 Template Master Table Latin Uppercase
 
-Format: HAR-002-v1.0-LC26U (Latin Certified, 26 Uppercase)
+Format: HAR-v1.0-LC26U (Latin Certified, 26 Uppercase)
 
 | Huruf | Unicode | Θ̂ | Na | Nb | Nd | Kp | Kx | Ks | Ka | Kc | Qp | Qx | Qs | Qa | Qc | AN | AK | AQ | H* |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -818,13 +818,13 @@ Fungsi `certify_alphabet` menghasilkan `CertReport` meliputi Master Table, Guard
 
 ## BAGIAN 9 — Peta Langkah Berikutnya
 
-### 9.1 Urutan Kerja untuk HAR-002
+### 9.1 Urutan Kerja untuk HAR
 
 - [x] **Minggu 1: SEAL** (Pengumpulan Font Latin, Lock Parameters)
 - [x] **Minggu 2: EXTRACT** (CSGI Skeletonization Zhang-Suen)
 - [ ] **Minggu 3: MEASURE** (MainPath, Q90, K/Q, Assembly v18)
 - [ ] **Minggu 4: VALIDATE** (Guard G1-G4, Injektivitas, R1-R5)
-- [ ] **Minggu 5: CERTIFY** (Sertifikasi HAR-002)
+- [ ] **Minggu 5: CERTIFY** (Sertifikasi HAR)
 
 ### 9.2 Prioritas Teknis
 
@@ -834,7 +834,7 @@ Fungsi `certify_alphabet` menghasilkan `CertReport` meliputi Master Table, Guard
 4. **P3**: Implementasi MainPath (Bagian 3)
 5. **P4**: Klasifikasi K/Q (Bagian 4)
 6. **P5**: Assembly + Guard v₁₈ (Bagian 5)
-7. **P6**: Validasi Sertifikasi HAR-002 (Bagian 6)
+7. **P6**: Validasi Sertifikasi HAR (Bagian 6)
 
 ---
 *Dokumen ini menyediakan spesifikasi teknis lengkap untuk menjalankan pipeline sertifikasi Latin dan digits. Setiap algoritma deterministik, setiap parameter dikunci, dan setiap langkah auditabel.*

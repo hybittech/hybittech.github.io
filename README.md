@@ -353,8 +353,7 @@ har/
 │   │   └── rank_analysis.json ← rank = 14
 │   ├── glyphs/                ← .hgeo per huruf
 │   └── certificate.json       ← Release seal
-├── HAR-002/                   ← Latin Uppercase (PENDING)
-└── HAR-010/                   ← HC Programming Core (PENDING)
+
 ```
 
 **Implementasi:** `src/hijaiyyah/har/` — `HARRegistry` class dengan auto-load HAR-001 dari `core/master_table`.
