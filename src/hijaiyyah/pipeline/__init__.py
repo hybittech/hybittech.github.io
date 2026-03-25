@@ -229,9 +229,9 @@ class PsiCompiler:
 
         # Fallback: use Master Table if available
         if all(x == 0 for x in hgeo.v18) and MASTER_TABLE:
-            v18 = MASTER_TABLE.get(letter)
-            if v18:
-                hgeo.measurement = self._v18_to_measurement(v18)
+            entry = MASTER_TABLE.get_by_char(letter)
+            if entry and hasattr(entry, 'vector'):
+                hgeo.measurement = self._v18_to_measurement(list(entry.vector))
 
         hgeo.guard_status = self._run_guards(hgeo.v18)
         hgeo.compute_digest()

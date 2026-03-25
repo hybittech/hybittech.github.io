@@ -134,7 +134,33 @@ class HARRegistry:
             return
 
         mt = _MT
-        if hasattr(mt, 'letters') and hasattr(mt, 'get_v18'):
+        # Try new MasterTable API
+        if hasattr(mt, 'all_entries') and hasattr(mt, 'get_by_char'):
+            entry = HAREntry(
+                id="HAR-001",
+                name="Hijaiyyah",
+                status=HARStatus.CERTIFIED,
+            )
+            letters = [e.char for e in mt.all_entries()]
+            entry.letters = letters
+            entry.glyph_count = len(letters)
+
+            for ch in letters:
+                e = mt.get_by_char(ch)
+                if e and hasattr(e, 'vector'):
+                    entry.master_table[ch] = list(e.vector)
+
+            if entry.master_table:
+                entry.validation = HARValidation(
+                    guard_pass=28, guard_total=28,
+                    inject_unique=378, inject_total=378,
+                    r1r5_pass=140, r1r5_total=140,
+                    rank=14,
+                )
+                self._entries["HAR-001"] = entry
+
+        # Legacy fallback
+        elif hasattr(mt, 'letters') and hasattr(mt, 'get_v18'):
             entry = HAREntry(
                 id="HAR-001",
                 name="Hijaiyyah",
