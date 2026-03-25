@@ -1,7 +1,7 @@
 
 
-# README.md — HOM (Updated Bab II Terminology)
-Matematika Hijaiyyah **"Sistem Operasi Metrik-Vektorial"** — Vektronometry · Normivektor · Aggregametric · Intrametric · Exometric.
+MATEMATIKA HIJAIYYAH
+**"Sistem Operasi Metrik-Vektorial"** — Vektronometry · Normivektor · Aggregametric · Intrametric · Exometric.
 
 ---
 
