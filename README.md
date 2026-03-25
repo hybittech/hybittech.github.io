@@ -1,7 +1,9 @@
 # MATEMATIKA HIJAIYYAH
 
 ---
-<img src="data/logo/matematika-hijaiyyah-logo.png" alt="Matematika Hijaiyyah Logo" width="200">
+<div align="center">
+  <img src="data/logo/matematika-hijaiyyah-logo.png" alt="Matematika Hijaiyyah Logo" width="400">
+</div>
 
 # **HOM — Hijaiyyah Operating Machine**
 
