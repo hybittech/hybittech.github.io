@@ -1,6 +1,12 @@
 <div align="center">
 
 # MATEMATIKA HIJAIYYAH
+
+| **VTM** | **NMV** | **AGM** | **ITM** | **EXM** |
+| :---: | :---: | :---: | :---: | :---: |
+| Vektronometry | Normivektor | Aggregametric | Intrametric | Exometric |
+| *Composition metrics* | *Norm-difference diagnostics* | *String accumulation* | *Distance geometry* | *Consistency audit* |
+
 ---
   <img src="data/logo/matematika-hijaiyyah-logo.png" alt="Matematika Hijaiyyah Logo" width="400">
 </div>
