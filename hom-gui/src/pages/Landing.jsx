@@ -373,7 +373,7 @@ export default function Landing() {
         <GlassPanel className="mt-6" title="Operations Flow" badge="Architecture">
           <div className="text-center font-mono text-xs text-hom-muted leading-relaxed">
             <pre className="inline-block text-left">
-{\`         ┌───────────────────┐
+{`         ┌───────────────────┐
          │   VEKTRONOMETRY   │ ← Measures composition
          │      (VTM)        │
          └─────────┬─────────┘
@@ -398,7 +398,7 @@ export default function Landing() {
          ┌───────────────────┐
          │    EXOMETRIC      │ ← Validates everything
          │      (EXM)        │
-         └───────────────────┘\`}
+         └───────────────────┘`}
             </pre>
           </div>
         </GlassPanel>
@@ -516,10 +516,10 @@ export default function Landing() {
                   Step 2 — Install & Run (Python Backend)
                 </div>
                 <code className="block p-3 rounded-lg bg-hom-bg border border-hom-border/30 font-mono text-xs text-hom-text whitespace-pre">
-{\`cd HOM
+{`cd HOM
 pip install -e ".[dev]"
 pytest tests/test_full_verification.py -v
-# → 1,380 passed\`}
+# → 1,380 passed`}
                 </code>
               </div>
 
@@ -529,9 +529,9 @@ pytest tests/test_full_verification.py -v
                   Step 3 — Run GUI (Frontend)
                 </div>
                 <code className="block p-3 rounded-lg bg-hom-bg border border-hom-border/30 font-mono text-xs text-hom-text whitespace-pre">
-{\`npm install
+{`npm install
 npm run dev
-# → Open http://localhost:5173/HOM/\`}
+# → Open http://localhost:5173/HOM/`}
                 </code>
               </div>
 
@@ -541,8 +541,8 @@ npm run dev
                   Step 4 — Run Full HOM Application
                 </div>
                 <code className="block p-3 rounded-lg bg-hom-bg border border-hom-border/30 font-mono text-xs text-hom-text whitespace-pre">
-{\`python -m hijaiyyah
-# → Opens HOM GUI (Tkinter-based scientific environment)\`}
+{`python -m hijaiyyah
+# → Opens HOM GUI (Tkinter-based scientific environment)`}
                 </code>
               </div>
             </div>
