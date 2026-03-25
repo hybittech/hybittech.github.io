@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0a0f;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e1e2e;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00e5ff44;
+  }
+
+  ::selection {
+    background: rgba(0, 229, 255, 0.25);
+    color: #fff;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-hom-panel/80 backdrop-blur-xl border border-hom-border/50 rounded-xl;
+  }
+  .glow-line {
+    @apply h-px bg-gradient-to-r from-transparent via-hom-accent/40 to-transparent;
+  }
+  .neon-text {
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5), 0 0 40px rgba(0, 229, 255, 0.15);
+  }
+  .gold-text {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.15);
+  }
+}
+
+.arabic-letter {
+  font-family: 'Amiri', serif;
+}

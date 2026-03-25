@@ -644,34 +644,35 @@ npm run dev
             View Source on GitHub
           </a>
         </div>
-        <div className="mt-12 flex justify-center">
-          <div className="font-mono text-[10px] md:text-xs text-hom-muted leading-tight text-left border border-hom-border/30 p-6 rounded-xl bg-hom-bg/50 backdrop-blur-sm shadow-glow-gold/5 max-w-full overflow-hidden">
-            <pre className="whitespace-pre overflow-x-auto">
-{`╔══════════════════════════════════════════════════════════════╗
-║       AUTHOR SIGNATURE                                       ║
-╠══════════════════════════════════════════════════════════════╣
-║                                                              ║
-║  Signed:     Firman Arief Hidayatullah                       ║
-║             Author Matematika Hijaiyyah                      ║
-║  Release:    HM-28-v1.2-HC18D                                ║
-║  Seal:       VERIFIED & SEALED                               ║
-║  Framework:  1.380/1.380 PASS — 0 FAIL                       ║
-║                                                              ║
-║  © 2026 (HMCL)                                               ║
-║  Hijaiyyah Mathematics Computational Laboratory              ║
-║                                                              ║
-╚══════════════════════════════════════════════════════════════╝`}
-            </pre>
-            <div className="mt-4 text-center border-t border-hom-border/20 pt-4">
-              <span className="text-hom-muted">Contact: </span>
-              <a 
-                href="mailto:hybittechnology@gmail.com" 
-                className="text-hom-gold hover:text-hom-accent transition-colors font-semibold"
-              >
-                hybittechnology@gmail.com
-              </a>
+        <div className="mt-12 max-w-4xl mx-auto flex flex-col items-center gap-8 px-4">
+          <div className="text-[10px] md:text-xs text-hom-muted/80 leading-relaxed text-justify space-y-4 p-8 rounded-xl border border-hom-border/20 bg-hom-panel w-full shadow-lg shadow-black/20">
+            <p className="font-semibold text-hom-text/90 text-center mb-6 text-sm">
+              © 2026 Hijaiyyah Mathematics Computational Laboratory (HMCL). All rights reserved.
+            </p>
+            <p>
+              The content, technology, and materials available within this platform—including but not limited to mathematical frameworks, computational models, software implementations, datasets, language specifications, compilation pipelines, file formats, processor architectures, and operating system designs—are proprietary to HMCL and are protected by applicable intellectual property laws.
+            </p>
+            <p>
+              No part of this platform may be copied, modified, distributed, transmitted, displayed, published, or otherwise used for commercial or non-commercial purposes without prior written authorization from HMCL.
+            </p>
+            <p>
+              HMCL, Hijaiyyah Mathematics, and all related names, logos, product names, and design marks are trademarks or registered trademarks of Hijaiyyah Mathematics Computational Laboratory.
+            </p>
+            <p className="font-semibold text-hom-red/90 text-center py-2 bg-hom-red/5 rounded-lg border border-hom-red/10">
+              Unauthorized use, reproduction, or distribution may result in civil and/or criminal penalties under applicable laws.
+            </p>
+            
+            <div className="mt-8 pt-6 border-t border-hom-border/20 flex flex-col items-center text-center space-y-2">
+              <span className="text-hom-gold font-bold tracking-wide text-sm">Firman Arief Hidayatullah</span>
+              <span className="text-hom-muted">Founder & Principal Architect</span>
+              <div className="flex flex-wrap justify-center gap-4 mt-4 font-mono text-[10px]">
+                <span className="px-3 py-1.5 rounded-full bg-hom-accent/10 border border-hom-accent/20 text-hom-accent">Release: HM-28-v1.2-HC18D</span>
+                <span className="px-3 py-1.5 rounded-full bg-hom-green/10 border border-hom-green/20 text-hom-green">Status: Verified & Sealed</span>
+              </div>
             </div>
           </div>
+
+
         </div>
       </section>
     </div>
