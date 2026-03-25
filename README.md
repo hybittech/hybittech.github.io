@@ -1,8 +1,7 @@
 
 
 # README.md — HOM (Updated Bab II Terminology)
-
-Berikut README lengkap dengan **seluruh istilah Bab II diperbarui** dari "Lima Bidang" ke **"Sistem Operasi Metrik-Vektorial"** — Vektronometry · Normivektor · Aggregametric · Intrametric · Exometric.
+Matematika Hijaiyyah **"Sistem Operasi Metrik-Vektorial"** — Vektronometry · Normivektor · Aggregametric · Intrametric · Exometric.
 
 ---
 
