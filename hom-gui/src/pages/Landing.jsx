@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import HijaiyyahScene from '../components/HijaiyyahScene';
 import FormulaBlock from '../components/FormulaBlock';
 import GlassPanel from '../components/GlassPanel';
+import { useLocale } from '../store/useLocale';
 
 /* ──────────── tiny helpers ──────────── */
 const colors = {
@@ -184,78 +185,151 @@ const operations = [
 ];
 
 export default function Landing() {
+  const { t } = useLocale();
+
   return (
     <div className="space-y-16">
       {/* ═══════════════ HERO ═══════════════ */}
-      <section className="relative min-h-[70vh] flex flex-col md:flex-row items-center justify-between pt-10 pb-20">
+      <section className="relative min-h-[70vh] flex flex-col items-center pt-10 pb-20">
         <div className="absolute inset-0 -z-10">
           <HijaiyyahScene />
         </div>
-        <div className="relative z-10 max-w-xl flex-1">
-          <div className="mb-4 flex items-center gap-3">
-            <span className="text-[10px] font-mono px-2 py-1 rounded-full bg-hom-accent/10 text-hom-accent border border-hom-accent/20">
-              HM-28-v1.2-HC18D
-            </span>
-            <span className="text-[10px] font-mono px-2 py-1 rounded-full bg-hom-green/10 text-hom-green border border-hom-green/20">
-              1,611 PASS · 0 FAIL
-            </span>
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 px-4 md:px-8">
+          {/* ─── Left: Text Content ─── */}
+          <div className="flex-1 min-w-0">
+            <div className="mb-10">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-[10px] font-mono px-2 py-1 rounded-full bg-hom-accent/10 text-hom-accent border border-hom-accent/20">
+                  HM-28-v1.2-HC18D
+                </span>
+                <span className="text-[10px] font-mono px-2 py-1 rounded-full bg-hom-green/10 text-hom-green border border-hom-green/20">
+                  1,611 PASS · 0 FAIL
+                </span>
+              </div>
+            </div>
+
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4">
+              <span className="neon-text">{t('Hijaiyyah')}</span>
+              <br />
+              <span className="text-hom-text">{t('Mathematics')}</span>
+            </h1>
+
+            <p className="text-hom-muted text-sm md:text-base leading-relaxed mb-4 max-w-lg">
+              {t('A formal mathematical system mapping 28 canonical Hijaiyyah letters to 18-dimensional integer vectors through four discrete geometric invariants — establishing ')}
+              <span className="text-hom-green font-semibold">hybit</span>
+              {t(' as the third computational paradigm.')}
+            </p>
+
+            <FormulaBlock
+              tex="h \in \mathcal{H}_{28} \xrightarrow{\text{Measure}} \mathbf{H}(h) \xrightarrow{\text{Map}} v_{18}(h) \in \mathbb{N}_0^{18} \xrightarrow{\text{Name}} h^*"
+              display
+              align="left"
+              className="!mx-0"
+            />
+
+            <div className="flex flex-wrap gap-3 mt-6">
+              <Link
+                to="/explorer"
+                className="px-5 py-2.5 rounded-lg bg-hom-accent text-black font-semibold text-sm hover:shadow-glow transition-all"
+              >
+                {t('Start Exploring →')}
+              </Link>
+              <Link
+                to="/lab"
+                className="px-5 py-2.5 rounded-lg border border-hom-border text-hom-text text-sm hover:border-hom-accent/50 transition-all"
+              >
+                {t('Open Lab')}
+              </Link>
+              <a
+                href="https://github.com/hybittech/HOM"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-2.5 rounded-lg border border-hom-border text-hom-muted text-sm hover:border-hom-gold/50 hover:text-hom-gold transition-all flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+                {t('GitHub')}
+              </a>
+            </div>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4">
-            <span className="neon-text">Hijaiyyah</span>
-            <br />
-            <span className="text-hom-text">Mathematics</span>
-          </h1>
-
-          <p className="text-hom-muted text-sm md:text-base leading-relaxed mb-4 max-w-lg">
-            A formal mathematical system mapping 28 canonical Hijaiyyah letters
-            to 18-dimensional integer vectors through four discrete geometric
-            invariants — establishing{' '}
-            <span className="text-hom-green font-semibold">hybit</span> as the
-            third computational paradigm.
-          </p>
-
-          <FormulaBlock
-            tex="h \in \mathcal{H}_{28} \xrightarrow{\text{Measure}} \mathbf{H}(h) \xrightarrow{\text{Map}} v_{18}(h) \in \mathbb{N}_0^{18} \xrightarrow{\text{Name}} h^*"
-            display
-          />
-
-          <div className="flex flex-wrap gap-3 mt-6">
-            <Link
-              to="/explorer"
-              className="px-5 py-2.5 rounded-lg bg-hom-accent text-black font-semibold text-sm hover:shadow-glow transition-all"
-            >
-              Explore Letters →
-            </Link>
-            <Link
-              to="/lab"
-              className="px-5 py-2.5 rounded-lg border border-hom-border text-hom-text text-sm hover:border-hom-accent/50 transition-all"
-            >
-              Open Lab
-            </Link>
-            <a
-              href="https://github.com/hybittech/HOM"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-lg border border-hom-border text-hom-muted text-sm hover:border-hom-gold/50 hover:text-hom-gold transition-all flex items-center gap-2"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-              </svg>
-              GitHub
-            </a>
+          {/* ─── Right: Arabic Calligraphy Logo ─── */}
+          <div className="flex-shrink-0 flex items-center justify-center md:justify-end w-full md:w-auto">
+            <img
+              src={import.meta.env.BASE_URL + 'logo.png'}
+              alt="الرياضيات الهجائية"
+              className="h-56 md:h-80 lg:h-[26rem] w-auto drop-shadow-[0_0_30px_rgba(212,175,55,0.35)] animate-[pulse_6s_ease-in-out_infinite] select-none pointer-events-none"
+            />
           </div>
-        </div>
-        
-        {/* Right Column: Logo */}
-        <div className="relative z-10 w-full md:w-1/2 flex justify-center md:justify-end mt-12 md:mt-0">
-          <img
-            src={import.meta.env.BASE_URL + 'logo.png'}
-            alt="الرياضيات الهجائية"
-            className="w-[300px] md:w-[450px] lg:w-[550px] h-auto drop-shadow-[0_0_30px_rgba(212,175,55,0.4)] animate-[pulse_6s_ease-in-out_infinite]"
-          />
         </div>
       </section>
+
+      {/* ═══════════════ EXTENDED DEFINITION BLOCK - TRUE EDGE-TO-EDGE ═══════════════ */}
+      <section className="w-full py-20 border-t border-b border-hom-border/10 bg-hom-panel/10">
+        <div className="w-full px-4 md:px-0"> {/* Minimal padding for mobile, zero for desktop edge-to-edge */}
+          <p className="text-hom-text/90 text-sm md:text-lg leading-relaxed mb-16 text-justify px-4 md:px-0">
+            {t('landing.hero.intro')}
+          </p>
+
+          {/* 5 Formal Operations Grid */}
+          {(() => {
+            const opColors = [
+              { border: 'border-hom-accent/50', glow: 'rgba(0,212,255,0.25)', num: 'bg-hom-accent/20 text-hom-accent border-hom-accent/40', title: 'text-hom-accent', shadow: '0 0 20px rgba(0,212,255,0.15)' },
+              { border: 'border-hom-gold/50', glow: 'rgba(212,175,55,0.25)', num: 'bg-hom-gold/20 text-hom-gold border-hom-gold/40', title: 'text-hom-gold', shadow: '0 0 20px rgba(212,175,55,0.15)' },
+              { border: 'border-hom-green/50', glow: 'rgba(0,200,83,0.25)', num: 'bg-hom-green/20 text-hom-green border-hom-green/40', title: 'text-hom-green', shadow: '0 0 20px rgba(0,200,83,0.15)' },
+              { border: 'border-hom-purple/50', glow: 'rgba(179,136,255,0.25)', num: 'bg-hom-purple/20 text-hom-purple border-hom-purple/40', title: 'text-hom-purple', shadow: '0 0 20px rgba(179,136,255,0.15)' },
+              { border: 'border-hom-red/50', glow: 'rgba(255,82,82,0.25)', num: 'bg-hom-red/20 text-hom-red border-hom-red/40', title: 'text-hom-red', shadow: '0 0 20px rgba(255,82,82,0.15)' },
+            ];
+            return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mb-16 px-4 md:px-0">
+                {[1, 2, 3, 4, 5].map((num) => {
+                  const c = opColors[num - 1];
+                  return (
+                    <div
+                      key={num}
+                      className={`relative p-6 rounded-2xl border ${c.border} bg-hom-panel/60 backdrop-blur-xl transition-all duration-500 group flex flex-col items-center text-center overflow-hidden cursor-default hover:scale-[1.04] hover:-translate-y-1`}
+                      style={{ boxShadow: `0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05), ${c.shadow}` }}
+                      onMouseEnter={(e) => e.currentTarget.style.boxShadow = `0 12px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 35px ${c.glow}`}
+                      onMouseLeave={(e) => e.currentTarget.style.boxShadow = `0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05), ${c.shadow}`}
+                    >
+                      {/* Number Badge */}
+                      <span className={`flex items-center justify-center w-10 h-10 rounded-xl ${c.num} border text-sm font-bold font-mono mb-4 shadow-lg`}>
+                        {num}
+                      </span>
+                      {/* Title */}
+                      <h3 className={`text-sm md:text-base font-bold uppercase tracking-widest ${c.title} mb-3`} style={{ fontFamily: "'Orbitron', sans-serif", textShadow: `0 0 12px ${c.glow}` }}>
+                        {t(`landing.hero.op${num}_title`)}
+                      </h3>
+                      {/* Divider */}
+                      <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-4" />
+                      {/* Description */}
+                      <p className="text-xs md:text-sm text-hom-text/80 leading-relaxed">
+                        {t(`landing.hero.op${num}_desc`)}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
+
+          <div className="space-y-10 px-4 md:px-0">
+            <p className="text-hom-text/80 text-sm md:text-lg leading-relaxed text-justify">
+              {t('landing.hero.mid')}
+            </p>
+
+            <div className="relative pt-12">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-hom-gold/40 to-transparent" />
+              <p className="text-hom-gold/90 font-medium text-sm md:text-xl leading-relaxed text-justify italic">
+                {t('landing.hero.conclusion')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto space-y-16 px-4 md:px-0">
 
       {/* ═══════════════ STATS ═══════════════ */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -264,8 +338,8 @@ export default function Landing() {
             <div className="text-3xl font-bold neon-text font-mono">
               {s.value}
             </div>
-            <div className="text-sm text-hom-text mt-1">{s.label}</div>
-            <div className="text-[10px] text-hom-muted mt-0.5">{s.sub}</div>
+            <div className="text-sm text-hom-text mt-1">{t(s.label)}</div>
+            <div className="text-[10px] text-hom-muted mt-0.5">{t(s.sub)}</div>
           </GlassPanel>
         ))}
       </section>
@@ -273,8 +347,8 @@ export default function Landing() {
       {/* ═══════════════ PARADIGM ═══════════════ */}
       <section>
         <GlassPanel
-          title="Three Computational Paradigms"
-          badge="Proven VF — Birkhoff Variety Analysis"
+          title={t('Three Computational Paradigms')}
+          badge={t('Proven VF — Birkhoff Variety Analysis')}
           glow="gold"
         >
           <FormulaBlock
@@ -312,23 +386,23 @@ export default function Landing() {
                 key={p.name}
                 className="text-center p-5 rounded-xl bg-hom-bg/50 border border-hom-border/30"
               >
-                <div className={`text-xl font-bold ${p.color}`}>{p.name}</div>
+                <div className={`text-xl font-bold ${p.color}`}>{t(p.name)}</div>
                 <div className="my-2">
                   <FormulaBlock tex={p.struct} />
                 </div>
-                <div className="text-xs text-hom-text">{p.desc}</div>
+                <div className="text-xs text-hom-text">{t(p.desc)}</div>
                 <div className="text-[10px] text-hom-muted mt-2">
-                  Domain: {p.domain}
+                  {t('Domain: ')}{t(p.domain)}
                 </div>
                 <div className="text-[10px] text-hom-muted">
-                  Validation: {p.validation}
+                  {t('Validation: ')}{t(p.validation)}
                 </div>
               </div>
             ))}
           </div>
           <div className="mt-4 text-center text-[10px] text-hom-muted">
-            Mutually irreducible: <span className="text-hom-green">Hybit</span> ↛ <span className="text-hom-gold">Bit</span>, <span className="text-hom-green">Hybit</span> ↛ Qubit, <span className="text-hom-gold">Bit</span> ↛ <span className="text-hom-green">Hybit</span>
-            (Theorems 3.8.1–3.8.3)
+            {t('Mutually irreducible: ')}<span className="text-hom-green">Hybit</span> ↛ <span className="text-hom-gold">Bit</span>, <span className="text-hom-green">Hybit</span> ↛ Qubit, <span className="text-hom-gold">Bit</span> ↛ <span className="text-hom-green">Hybit</span>
+            {t('(Theorems 3.8.1–3.8.3)')}
           </div>
         </GlassPanel>
       </section>
@@ -336,13 +410,12 @@ export default function Landing() {
       {/* ═══════════════ KEY IDENTITIES & THEOREMS ═══════════════ */}
       <section>
         <GlassPanel
-          title="Key Identities & Theorems"
-          badge="12 Proven Results"
+          title={t('Key Identities & Theorems')}
+          badge={t('12 Proven Results')}
           glow
         >
           <p className="text-sm text-hom-muted mb-6">
-            The complete set of identities and theorems that form the mathematical backbone of Hijaiyyah Mathematics.
-            Each result is rigorously verified across all 28 letters.
+            {t('The complete set of identities and theorems that form the mathematical backbone of Hijaiyyah Mathematics. Each result is rigorously verified across all 28 letters.')}
           </p>
 
           <div className="overflow-x-auto">
@@ -350,10 +423,10 @@ export default function Landing() {
               <thead>
                 <tr className="border-b border-hom-border/40">
                   <th className="text-left py-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-hom-muted w-8">#</th>
-                  <th className="text-left py-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-hom-muted">Result</th>
-                  <th className="text-left py-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-hom-muted">Formula</th>
-                  <th className="text-center py-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-hom-muted w-16">Label</th>
-                  <th className="text-left py-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-hom-muted w-28">Source</th>
+                  <th className="text-left py-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-hom-muted">{t('Result')}</th>
+                  <th className="text-left py-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-hom-muted">{t('Formula')}</th>
+                  <th className="text-center py-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-hom-muted w-16">{t('Label')}</th>
+                  <th className="text-left py-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-hom-muted w-28">{t('Source')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -474,7 +547,7 @@ export default function Landing() {
                     }`}
                   >
                     <td className="py-3 px-3 font-mono text-xs text-hom-muted">{row.id}</td>
-                    <td className="py-3 px-3 text-xs text-hom-text font-medium whitespace-nowrap">{row.result}</td>
+                    <td className="py-3 px-3 text-xs text-hom-text font-medium whitespace-nowrap">{t(row.result)}</td>
                     <td className="py-3 px-3">
                       <FormulaBlock tex={row.tex} />
                     </td>
@@ -483,7 +556,7 @@ export default function Landing() {
                         {row.label}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-[10px] text-hom-muted font-mono">{row.source}</td>
+                    <td className="py-3 px-3 text-[10px] text-hom-muted font-mono">{t(row.source)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -493,18 +566,18 @@ export default function Landing() {
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="p-3 rounded-lg bg-hom-accent/5 border border-hom-accent/15 text-center">
               <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-hom-accent/10 border border-hom-accent/20 text-hom-accent">DP</span>
-              <div className="text-[10px] text-hom-muted mt-2">Decomposition Property</div>
-              <div className="text-[10px] text-hom-text/60">Structural splitting of invariants</div>
+              <div className="text-[10px] text-hom-muted mt-2">{t('Decomposition Property')}</div>
+              <div className="text-[10px] text-hom-text/60">{t('Structural splitting of invariants')}</div>
             </div>
             <div className="p-3 rounded-lg bg-hom-green/5 border border-hom-green/15 text-center">
               <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-hom-green/10 border border-hom-green/20 text-hom-green">CC</span>
-              <div className="text-[10px] text-hom-muted mt-2">Computational Check</div>
-              <div className="text-[10px] text-hom-text/60">Verified exhaustively on all 28 letters</div>
+              <div className="text-[10px] text-hom-muted mt-2">{t('Computational Check')}</div>
+              <div className="text-[10px] text-hom-text/60">{t('Verified exhaustively on all 28 letters')}</div>
             </div>
             <div className="p-3 rounded-lg bg-hom-gold/5 border border-hom-gold/15 text-center">
               <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-hom-gold/10 border border-hom-gold/20 text-hom-gold">VF</span>
-              <div className="text-[10px] text-hom-muted mt-2">Verified Formal</div>
-              <div className="text-[10px] text-hom-text/60">Proven theorem with formal proof</div>
+              <div className="text-[10px] text-hom-muted mt-2">{t('Verified Formal')}</div>
+              <div className="text-[10px] text-hom-text/60">{t('Proven theorem with formal proof')}</div>
             </div>
           </div>
         </GlassPanel>
@@ -514,14 +587,14 @@ export default function Landing() {
       <section>
         <div className="mb-6">
           <h2 className="text-2xl font-bold">
-            Metrik-Vektorial Operations System
+            {t('Metrik-Vektorial Operations System')}
           </h2>
           <p className="text-sm text-hom-muted mt-1">
-            Five formal operations built on three pillars:{' '}
-            <span className="text-hom-accent">Vector</span> +{' '}
-            <span className="text-hom-gold">Norm</span> +{' '}
-            <span className="text-hom-green">Metric</span> — each answering a
-            fundamentally different question about letter structure.
+            {t('Five formal operations built on three pillars: ')}
+            <span className="text-hom-accent">{t('Vector')}</span> +{' '}
+            <span className="text-hom-gold">{t('Norm')}</span> +{' '}
+            <span className="text-hom-green">{t('Metric')}</span>
+            {t(' — each answering a fundamentally different question about letter structure.')}
           </p>
         </div>
 
@@ -545,14 +618,14 @@ export default function Landing() {
                     </span>
                   </div>
                   <div className="text-lg font-semibold text-hom-text">
-                    {op.name}
+                    {t(op.name)}
                   </div>
                   <div className={`text-xs font-medium ${op.textColor}`}>
-                    {op.tagline}
+                    {t(op.tagline)}
                   </div>
                   <div className="glow-line" />
                   <div className="text-[11px] text-hom-muted italic">
-                    "{op.question}"
+                    "{t(op.question)}"
                   </div>
                   <div className="mt-2">
                     <div className="text-[10px] text-hom-muted mb-1">
@@ -569,12 +642,12 @@ export default function Landing() {
                 {/* Right: Description + Capabilities */}
                 <div className="space-y-4">
                   <p className="text-sm text-hom-text/90 leading-relaxed">
-                    {op.description}
+                    {t(op.description)}
                   </p>
 
                   <div>
                     <div className="text-[10px] text-hom-muted font-semibold uppercase tracking-wider mb-2">
-                      Capabilities
+                      {t('Capabilities')}
                     </div>
                     <ul className="space-y-1.5">
                       {op.capabilities.map((cap, i) => (
@@ -583,7 +656,7 @@ export default function Landing() {
                           className="flex items-start gap-2 text-xs text-hom-text/80"
                         >
                           <span className={`mt-0.5 ${op.textColor}`}>▸</span>
-                          <span>{cap}</span>
+                          <span>{t(cap)}</span>
                         </li>
                       ))}
                     </ul>
@@ -592,8 +665,8 @@ export default function Landing() {
                   <div
                     className={`text-[11px] font-mono p-3 rounded-lg ${op.bgColor} border ${op.borderColor}`}
                   >
-                    <span className="text-hom-muted">Example: </span>
-                    <span className="text-hom-text/80">{op.example}</span>
+                    <span className="text-hom-muted">{t('Example: ')}</span>
+                    <span className="text-hom-text/80">{t(op.example)}</span>
                   </div>
                 </div>
               </div>
@@ -621,8 +694,8 @@ export default function Landing() {
             {/* ═══════════ ROW 1: CSGI + Euklides ═══════════ */}
             <div className="flex items-center justify-center gap-6 mb-1">
               <NodeBox
-                label="C S G I"
-                sub="Skeletonizer"
+                label={t('C S G I')}
+                sub={t('Skeletonizer')}
                 color={colors.text}
                 borderColor={colors.border}
                 bgColor={`${colors.panel}`}
@@ -686,7 +759,7 @@ export default function Landing() {
               {/* Core Invariant */}
               <div className="space-y-1">
                 <NodeBox
-                  label="Core Invariant"
+                  label={t('Core Invariant')}
                   formula="h = [\hat{\Theta} \mid \mathbf{N} \mid \mathbf{K} \mid \mathbf{Q}]"
                   color={colors.accent}
                   borderColor={`${colors.accent}40`}
@@ -698,7 +771,7 @@ export default function Landing() {
               {/* Vektor 14 (center) */}
               <div className="space-y-1">
                 <NodeBox
-                  label="Vektor 14"
+                  label={t('Vektor 14')}
                   formula="v_{14}(h) = [\hat{\Theta} \mid \mathbf{N} \mid \mathbf{K} \mid \mathbf{Q}] \in \mathbb{N}_0^{14}"
                   color={colors.accent}
                   borderColor={`${colors.accent}50`}
@@ -710,7 +783,7 @@ export default function Landing() {
               {/* MainPath */}
               <div className="space-y-1">
                 <NodeBox
-                  label="MainPath"
+                  label={t('MainPath')}
                   formula="\gamma_h : [0, L_h] \to \mathbb{R}^2"
                   color={colors.gold}
                   borderColor={`${colors.gold}40`}
@@ -718,7 +791,7 @@ export default function Landing() {
                 />
                 <ArrowDown height={16} color={colors.muted} />
                 <NodeBox
-                  label="Turning & Residu"
+                  label={t('Turning & Residu')}
                   formula="\hat{\Theta}(h) = U(h) + \rho(h)"
                   color={colors.gold}
                   borderColor={`${colors.gold}30`}
@@ -727,7 +800,7 @@ export default function Landing() {
                 />
                 <ArrowDown height={16} color={colors.muted} />
                 <NodeBox
-                  label="Mod-4"
+                  label={t('Mod-4')}
                   formula="\hat{\Theta}(h) \equiv 0 \pmod{4}"
                   color={colors.gold}
                   borderColor={`${colors.gold}20`}
@@ -773,14 +846,14 @@ export default function Landing() {
             {/* ═══════════ ROW 5: Injective → Vektor 18D ═══════════ */}
             <div className="grid grid-cols-[1fr_2fr_1fr] gap-3 items-center">
               <NodeBox
-                label="Injective"
+                label={t('Injective')}
                 color={colors.accent}
                 borderColor={`${colors.accent}30`}
                 bgColor={`${colors.accent}06`}
                 small
               />
               <NodeBox
-                label="Vektor 18D"
+                label={t('Vektor 18D')}
                 formula="v_{18}(h) = [\hat{\Theta} \mid \mathbf{N} \mid \mathbf{K} \mid \mathbf{Q} \mid A_N, A_K, A_Q \mid H^*(h)] \in \mathbb{N}_0^{18}"
                 color={colors.accent}
                 borderColor={`${colors.accent}60`}
@@ -796,13 +869,13 @@ export default function Landing() {
             {/* ═══════════ ROW 6: Audit Collision + Formal Foundation + Guards ═══════════ */}
             <div className="grid grid-cols-3 gap-3">
               <NodeBox
-                label="Audit Collision"
+                label={t('Audit Collision')}
                 color={colors.red}
                 borderColor={`${colors.red}30`}
                 bgColor={`${colors.red}06`}
               />
               <NodeBox
-                label="Formal Foundation"
+                label={t('Formal Foundation')}
                 color={colors.text}
                 borderColor={`${colors.border}`}
                 bgColor={colors.panel}
@@ -829,7 +902,7 @@ export default function Landing() {
                 }}
               >
                 <div className="text-base font-bold" style={{ color: colors.gold }}>
-                  Mathematical Operating System
+                  {t('Mathematical Operating System')}
                 </div>
               </div>
             </div>
@@ -846,35 +919,35 @@ export default function Landing() {
 
             <div className="grid grid-cols-5 gap-2">
               <NodeBox
-                label="Normivektor"
+                label={t('Normivektor')}
                 color={colors.red}
                 borderColor={`${colors.red}50`}
                 bgColor={`${colors.red}0a`}
                 glow
               />
               <NodeBox
-                label="Vectronometry"
+                label={t('Vectronometry')}
                 color={colors.accent}
                 borderColor={`${colors.accent}50`}
                 bgColor={`${colors.accent}0a`}
                 glow
               />
               <NodeBox
-                label="Intrametric"
+                label={t('Intrametric')}
                 color={colors.gold}
                 borderColor={`${colors.gold}50`}
                 bgColor={`${colors.gold}0a`}
                 glow
               />
               <NodeBox
-                label="Exometric"
+                label={t('Exometric')}
                 color={colors.purple}
                 borderColor={`${colors.purple}50`}
                 bgColor={`${colors.purple}0a`}
                 glow
               />
               <NodeBox
-                label="Aggregametric"
+                label={t('Aggregametric')}
                 color={colors.green}
                 borderColor={`${colors.green}50`}
                 bgColor={`${colors.green}0a`}
@@ -907,7 +980,7 @@ export default function Landing() {
                   Hybit
                 </div>
                 <div className="text-[10px] text-hom-muted mt-1">
-                  Hijaiyyah Hyperdimensional Bit Integration Technology
+                  {t('Hijaiyyah Hyperdimensional Bit Integration Technology')}
                 </div>
               </div>
             </div>
@@ -979,8 +1052,8 @@ export default function Landing() {
       {/* ═══════════════ VERIFICATION ═══════════════ */}
       <section>
         <GlassPanel
-          title="1,380-Check Verification Framework"
-          badge="ALL PASS"
+          title={t('1,380-Check Verification Framework')}
+          badge={t('ALL PASS')}
           glow="green"
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
@@ -996,19 +1069,19 @@ export default function Landing() {
                 <div className="text-3xl font-bold text-hom-green font-mono">
                   {b.checks}
                 </div>
-                <div className="text-sm text-hom-text mt-1">{b.bab}</div>
-                <div className="text-xs text-hom-muted">{b.label}</div>
-                <div className="text-[10px] text-hom-muted/60 mt-1">{b.sub}</div>
+                <div className="text-sm text-hom-text mt-1">{t(b.bab)}</div>
+                <div className="text-xs text-hom-muted">{t(b.label)}</div>
+                <div className="text-[10px] text-hom-muted/60 mt-1">{t(b.sub)}</div>
               </div>
             ))}
           </div>
           <div className="mt-4 text-center">
             <span className="font-mono text-sm text-hom-green">
-              1,380 PASS · 0 FAIL · 0 SKIP
+              {t('1,380 PASS · 0 FAIL · 0 SKIP')}
             </span>
           </div>
           <div className="mt-2 text-center text-[10px] text-hom-muted">
-            Full test suite: 1,611 passed · 0 skipped · 0 failed in ~46s
+            {t('Full test suite: 1,611 passed · 0 skipped · 0 failed in ~46s')}
           </div>
         </GlassPanel>
       </section>
@@ -1016,10 +1089,9 @@ export default function Landing() {
       {/* ═══════════════ DOWNLOAD & RUN ═══════════════ */}
       <section>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold">Download & Run</h2>
+          <h2 className="text-2xl font-bold">{t('Download & Run')}</h2>
           <p className="text-sm text-hom-muted mt-1">
-            HOM is open for audit. Clone the repository, install, and run
-            locally.
+            {t('HOM is open for audit. Clone the repository, install, and run locally.')}
           </p>
         </div>
 
@@ -1035,9 +1107,9 @@ export default function Landing() {
                 <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
               </svg>
               <div>
-                <div className="text-sm font-semibold">GitHub Repository</div>
+                <div className="text-sm font-semibold">{t('GitHub Repository')}</div>
                 <div className="text-[10px] text-hom-muted">
-                  Full source code, tests, documentation
+                  {t('Full source code, tests, documentation')}
                 </div>
               </div>
             </div>
@@ -1052,15 +1124,15 @@ export default function Landing() {
             <div className="mt-4 space-y-2 text-xs text-hom-muted">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-hom-green" />
-                Python 3.11+ backend — 1,611 tests
+                {t('Python 3.11+ backend — 1,611 tests')}
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-hom-accent" />
-                React + Three.js frontend — this GUI
+                {t('React + Three.js frontend — this GUI')}
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-hom-gold" />
-                24 pipeline components defined
+                {t('24 pipeline components defined')}
               </div>
             </div>
           </GlassPanel>
@@ -1068,7 +1140,7 @@ export default function Landing() {
           {/* Quick Start Card */}
           <GlassPanel>
             <div className="text-sm font-semibold mb-4">
-              Quick Start — Run Locally
+              {t('Quick Start — Run Locally')}
             </div>
 
             <div className="space-y-4">
@@ -1122,7 +1194,7 @@ npm run dev
         </div>
 
         {/* Prerequisites */}
-        <GlassPanel className="mt-4" title="Prerequisites">
+        <GlassPanel className="mt-4" title={t('Prerequisites')}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
               { name: 'Python', version: '3.11+', check: 'python --version' },
@@ -1157,9 +1229,9 @@ npm run dev
             className="glass p-4 text-center hover:border-hom-accent/40 transition-all"
           >
             <div className="text-lg mb-1">📦</div>
-            <div className="text-xs font-semibold">Download ZIP</div>
+            <div className="text-xs font-semibold">{t('Download ZIP')}</div>
             <div className="text-[10px] text-hom-muted">
-              No Git required
+              {t('No Git required')}
             </div>
           </a>
           <a
@@ -1169,9 +1241,9 @@ npm run dev
             className="glass p-4 text-center hover:border-hom-green/40 transition-all"
           >
             <div className="text-lg mb-1">☁️</div>
-            <div className="text-xs font-semibold">GitHub Codespaces</div>
+            <div className="text-xs font-semibold">{t('GitHub Codespaces')}</div>
             <div className="text-[10px] text-hom-muted">
-              Run in browser — no local install
+              {t('Run in browser — no local install')}
             </div>
           </a>
           <a
@@ -1181,9 +1253,9 @@ npm run dev
             className="glass p-4 text-center hover:border-hom-gold/40 transition-all"
           >
             <div className="text-lg mb-1">🌐</div>
-            <div className="text-xs font-semibold">Live Demo</div>
+            <div className="text-xs font-semibold">{t('Live Demo')}</div>
             <div className="text-[10px] text-hom-muted">
-              This page — already running
+              {t('This page — already running')}
             </div>
           </a>
         </div>
@@ -1197,15 +1269,14 @@ npm run dev
           display
         />
         <p className="text-sm text-hom-muted mt-4 max-w-md mx-auto">
-          Three paradigms. Three optimal domains. Five metrik-vektorial
-          operations. One pipeline. One ecosystem.
+          {t('Three paradigms. Three optimal domains. Five metrik-vektorial operations. One pipeline. One ecosystem.')}
         </p>
         <div className="mt-6 flex justify-center gap-4">
           <Link
             to="/explorer"
             className="px-6 py-2.5 rounded-lg bg-hom-accent text-black font-semibold text-sm hover:shadow-glow transition-all"
           >
-            Start Exploring →
+            {t('Start Exploring →')}
           </Link>
           <a
             href="https://github.com/hybittech/HOM"
@@ -1213,25 +1284,25 @@ npm run dev
             rel="noopener noreferrer"
             className="px-6 py-2.5 rounded-lg border border-hom-border text-hom-muted text-sm hover:text-hom-gold hover:border-hom-gold/50 transition-all"
           >
-            View Source on GitHub
+            {t('View Source on GitHub')}
           </a>
         </div>
         <div className="mt-12 max-w-4xl mx-auto flex flex-col items-center gap-8 px-4">
           <div className="text-[10px] md:text-xs text-white leading-relaxed text-justify space-y-4 p-8 rounded-xl border border-hom-border/20 bg-hom-panel w-full shadow-lg shadow-black/20">
             <p className="font-semibold text-white text-center mb-6 text-sm">
-              © 2026 Hijaiyyah Mathematics Computational Laboratory (HMCL). All rights reserved.
+              {t('© 2026 Hijaiyyah Mathematics Computational Laboratory (HMCL). All rights reserved.')}
             </p>
             <p>
-              The content, technology, and materials available within this platform—including but not limited to mathematical frameworks, computational models, software implementations, datasets, language specifications, compilation pipelines, file formats, processor architectures, and operating system designs—are proprietary to HMCL and are protected by applicable intellectual property laws.
+              {t('The content, technology, and materials available within this platform—including but not limited to mathematical frameworks, computational models, software implementations, datasets, language specifications, compilation pipelines, file formats, processor architectures, and operating system designs—are proprietary to HMCL and are protected by applicable intellectual property laws.')}
             </p>
             <p>
-              No part of this platform may be copied, modified, distributed, transmitted, displayed, published, or otherwise used for commercial or non-commercial purposes without prior written authorization from HMCL.
+              {t('No part of this platform may be copied, modified, distributed, transmitted, displayed, published, or otherwise used for commercial or non-commercial purposes without prior written authorization from HMCL.')}
             </p>
             <p>
-              HMCL, Hijaiyyah Mathematics, and all related names, logos, product names, and design marks are trademarks or registered trademarks of Hijaiyyah Mathematics Computational Laboratory.
+              {t('HMCL, Hijaiyyah Mathematics, and all related names, logos, product names, and design marks are trademarks or registered trademarks of Hijaiyyah Mathematics Computational Laboratory.')}
             </p>
             <p className="font-semibold text-hom-red/90 text-center py-2 bg-hom-red/5 rounded-lg border border-hom-red/10">
-              Unauthorized use, reproduction, or distribution may result in civil and/or criminal penalties under applicable laws.
+              {t('Unauthorized use, reproduction, or distribution may result in civil and/or criminal penalties under applicable laws.')}
               <br />
               <span className="text-white/60 text-[9px] tracking-[0.3em] font-bold mt-2 block">
                 PT AMRA COSMICTERA TECHNOLOGY
@@ -1240,10 +1311,10 @@ npm run dev
             
             <div className="mt-8 pt-6 border-t border-hom-border/20 flex flex-col items-center text-center space-y-2">
               <span className="text-hom-gold font-bold tracking-wide text-sm">Firman Arief Hidayatullah</span>
-              <span className="text-hom-muted">Founder & Principal Architect</span>
+              <span className="text-hom-muted">{t('Founder & Principal Architect')}</span>
               <div className="flex flex-wrap justify-center gap-4 mt-4 font-mono text-[10px]">
-                <span className="px-3 py-1.5 rounded-full bg-hom-accent/10 border border-hom-accent/20 text-hom-accent">Release: HM-28-v1.2-HC18D</span>
-                <span className="px-3 py-1.5 rounded-full bg-hom-green/10 border border-hom-green/20 text-hom-green">Status: Verified & Sealed</span>
+                <span className="px-3 py-1.5 rounded-full bg-hom-accent/10 border border-hom-accent/20 text-hom-accent">{t('Release: HM-28-v1.2-HC18D')}</span>
+                <span className="px-3 py-1.5 rounded-full bg-hom-green/10 border border-hom-green/20 text-hom-green">{t('Status: Verified & Sealed')}</span>
               </div>
             </div>
           </div>
@@ -1252,5 +1323,6 @@ npm run dev
         </div>
       </section>
     </div>
-  );
+  </div>
+);
 }

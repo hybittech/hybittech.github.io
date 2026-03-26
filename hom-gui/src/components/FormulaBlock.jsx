@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import katex from 'katex';
 
-export default function FormulaBlock({ tex, display = false, className = '' }) {
+export default function FormulaBlock({ tex, display = false, align = 'center', className = '' }) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -9,7 +9,9 @@ export default function FormulaBlock({ tex, display = false, className = '' }) {
       try {
         katex.render(tex, ref.current, {
           throwOnError: false,
-          displayMode: display,
+          // If we want left alignment, we must use inline mode (displayMode: false) 
+          // to prevent KaTeX from forcing its own center alignment.
+          displayMode: align === 'left' ? false : display,
         });
       } catch {
         ref.current.textContent = tex;
@@ -17,5 +19,7 @@ export default function FormulaBlock({ tex, display = false, className = '' }) {
     }
   }, [tex, display]);
 
-  return <span ref={ref} className={`${display ? 'block text-center my-3' : 'inline'} ${className}`} />;
+  const alignmentClass = display ? (align === 'left' ? 'text-left' : 'text-center') : '';
+
+  return <span ref={ref} className={`${display ? `block ${alignmentClass} my-3 overflow-x-auto` : 'inline'} ${className}`} />;
 }

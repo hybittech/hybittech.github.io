@@ -33,6 +33,9 @@
   .glass {
     @apply bg-hom-panel/80 backdrop-blur-xl border border-hom-border/50 rounded-xl;
   }
+  .glass-card {
+    @apply bg-hom-panel/30 backdrop-blur-md border border-hom-border/20 rounded-2xl hover:bg-hom-panel/50 hover:border-hom-accent/30 transition-all duration-500;
+  }
   .glow-line {
     @apply h-px bg-gradient-to-r from-transparent via-hom-accent/40 to-transparent;
   }
