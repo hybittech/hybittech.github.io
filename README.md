@@ -11,7 +11,7 @@
   <img src="data/logo/matematika-hijaiyyah-logo.png" alt="Matematika Hijaiyyah Logo" width="400">
 </div>
 
-# **HOM — Hijaiyyah Operating Machine** &nbsp;&nbsp;&nbsp; [![Web GUI](https://img.shields.io/badge/Web_GUI-Open_App-blue?style=for-the-badge&logo=react)](https://hybittech.github.io/HOM)
+# **HOM — Hijaiyyah Operating Machine** &nbsp;&nbsp;&nbsp; [![Web GUI](https://img.shields.io/badge/Web_GUI-Open_App-blue?style=for-the-badge&logo=react)](https://hybittech.github.io)
 
 ### Core Computational System for Hijaiyyah Mathematics & Hybit Pipeline
 

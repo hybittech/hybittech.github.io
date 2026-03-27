@@ -1281,7 +1281,7 @@ npm run dev
             </div>
           </a>
           <a
-            href="https://hybittech.github.io/HOM/#/"
+            href="https://hybittech.github.io/#/"
             target="_blank"
             rel="noopener noreferrer"
             className="glass p-4 text-center hover:border-hom-gold/40 transition-all"
