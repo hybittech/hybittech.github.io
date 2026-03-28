@@ -268,7 +268,7 @@ export default function Landing() {
             <img
               src={import.meta.env.BASE_URL + 'logo_gif_01.gif'}
               alt="الرياضيات الهجائية"
-              className="h-48 md:h-72 lg:h-[22rem] w-auto drop-shadow-[0_0_30px_rgba(212,175,55,0.35)] animate-[pulse_6s_ease-in-out_infinite] select-none pointer-events-none"
+              className="h-48 md:h-72 lg:h-[22rem] w-auto drop-shadow-[0_0_30px_rgba(212,175,55,0.35)] select-none pointer-events-none"
             />
           </div>
         </div>
