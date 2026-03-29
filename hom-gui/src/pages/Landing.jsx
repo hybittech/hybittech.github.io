@@ -265,10 +265,13 @@ export default function Landing() {
 
           {/* ─── Right: Arabic Calligraphy Logo ─── */}
           <div className="flex-shrink-0 flex items-center justify-center md:justify-end w-full md:w-auto translate-x-3 md:translate-x-8 lg:translate-x-16">
-            <img
-              src={import.meta.env.BASE_URL + 'logo_gif_01.gif'}
-              alt="الرياضيات الهجائية"
-              className="h-48 md:h-72 lg:h-[22rem] w-auto drop-shadow-[0_0_30px_rgba(212,175,55,0.35)] select-none pointer-events-none"
+            <video
+              src={import.meta.env.BASE_URL + 'hybit_vid_02.mp4'}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-64 md:h-96 lg:h-[32rem] w-auto select-none pointer-events-none"
             />
           </div>
         </div>
