@@ -361,6 +361,43 @@ export default function System() {
                 </div>
               </div>
             </div>
+
+            {/* Row 3: ASCII Block Diagram */}
+            <div className="mt-6 p-5 rounded-xl border border-hom-green/20 bg-[#0a0a0f] overflow-x-auto shadow-inner hide-scrollbar">
+              <div className="text-[10px] uppercase tracking-widest text-hom-green/80 flex items-center gap-2 mb-4 font-bold border-b border-hom-green/10 pb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-hom-green animate-pulse"></span>
+                RTL Topology Schematic
+              </div>
+              <pre className="text-[10px] sm:text-xs text-hom-green font-mono leading-tight whitespace-pre">
+{`                    ┌──────────────────────────────────────────────────────┐
+                    │                    HCPU Top-Level                    │
+  ┌──────────┐      │  ┌───────┐  ┌───────┐  ┌─────────┐  ┌───────┐        │
+  │   Code   │◄─────┤  │ FETCH │─►│DECODE │─►│ EXECUTE │─►│MEMORY │──►WB   │
+  │   ROM    │      │  └───┬───┘  └───┬───┘  └────┬────┘  └───┬───┘        │
+  └──────────┘      │      │          │    ┌──────┤            │           │
+                    │      │    ┌─────┴──┐│┌─────┴────┐ ┌─────┴─────┐      │
+                    │      │    │RegFile ││├ ScalarALU│ │  DataRAM  │      │
+                    │      │    │18 GPR  │││ (32-bit) │ │  (16 KB)  │      │
+                    │      │    │16 H-Reg│││ MOV/ADD/ │ │  LOAD/    │      │
+                    │      │    │ FLAGS  │││ SUB/MUL/ │ │  STORE    │      │
+                    │      │    └────────┘││ CMP      │ ├───────────┤      │
+                    │      │              │├──────────┤ │  Stack    │      │
+                    │      │              ││ CodexALU │ │ (256×32)  │      │
+                    │ ┌────┴────┐         ││ HCADD    │ │ PUSH/POP  │      │
+                    │ │  Ctrl   │         ││ HNRM2    │ └───────────┘      │
+                    │ │ pc_stall│         ││ HDIST    │                    │
+                    │ │ id_flush│         │├──────────┤  ┌──────────────┐  │
+                    │ │ if_flush│         ││  Guard   │  │  UART TX     │  │
+                    │ │ ex_stall│         ││ G1–G4    │  │  8N1 115200  │─┼──► TXD
+                    │ └────┬────┘         ││ T1–T2    │  └──────────────┘  │
+                    │      │       ┌──────┤└──────────┘                    │
+                    │      │       │ FWD  │ ┌──────────┐                   │
+                    │      └───────┤EX→ID │ │Master ROM│                   │
+                    │              │MEM→ID│─┤28×144-bit│                   │
+                    │              └──────┘ └──────────┘                   │
+                    └──────────────────────────────────────────────────────┘`}
+              </pre>
+            </div>
           </div>
         </div>
 
