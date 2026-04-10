@@ -305,36 +305,59 @@ export default function System() {
             </span>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
-              <div className="text-[10px] uppercase tracking-widest text-hom-muted mb-2 font-bold">Fitur Perangkat Keras</div>
-              <div className="space-y-1.5 text-xs text-hom-text/80 font-mono">
-                <div>▸ 5-stage In-Order Pipeline (Harvard)</div>
-                <div>▸ 18-wide Vector Codex ALU (AGM, VTM, ITM)</div>
-                <div>▸ Hardware Hazard Resolution (Load-Use stall)</div>
-                <div>▸ O(1) Intrinsik Guard Checker (EXM)</div>
-                <div>▸ Hardware HISAB Serializer (Nibble-pack + CRC32)</div>
+          <div className="mt-4 space-y-6">
+            {/* Row 1: Pipeline & Memory */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl border border-hom-green/20 bg-hom-panel/40">
+                <div className="text-[10px] uppercase tracking-widest text-hom-muted mb-3 font-bold border-b border-hom-green/10 pb-2">
+                  5-Stage Pipeline Arsitektur
+                </div>
+                <div className="space-y-2 text-xs font-mono">
+                  <div className="flex gap-2"><span className="text-hom-accent w-6">IF</span><span className="text-hom-text/80">Instruction Fetch (BRAM sync, 2-phase)</span></div>
+                  <div className="flex gap-2"><span className="text-hom-gold w-6">ID</span><span className="text-hom-text/80">Decode, GPR Read, Hazard Detection</span></div>
+                  <div className="flex gap-2"><span className="text-hom-green w-6">EX</span><span className="text-hom-text/80">18-wide Vector ALU, HISAB, Branch Eval</span></div>
+                  <div className="flex gap-2"><span className="text-hom-purple w-6">MEM</span><span className="text-hom-text/80">Data Memory Access (Combinational)</span></div>
+                  <div className="flex gap-2"><span className="text-hom-red w-6">WB</span><span className="text-hom-text/80">GPR Write-back (Synchronous)</span></div>
+                </div>
+              </div>
+              
+              <div className="p-4 rounded-xl border border-hom-green/20 bg-hom-panel/40">
+                <div className="text-[10px] uppercase tracking-widest text-hom-muted mb-3 font-bold border-b border-hom-green/10 pb-2">
+                  Memory & Hazard Resolution
+                </div>
+                <div className="space-y-2 text-xs text-hom-text/80 leading-relaxed">
+                  <div className="flex items-start gap-2"><span className="text-hom-green mt-0.5">▸</span><span><strong className="text-hom-text">Load-Use Hazard</strong>: Deteksi di ID stage, memicu 1-cycle stall + memori bypass otomatis.</span></div>
+                  <div className="flex items-start gap-2"><span className="text-hom-green mt-0.5">▸</span><span><strong className="text-hom-text">Store-Load Interlock</strong>: Mencegah bacaan invalid pada alamat memori yang sama.</span></div>
+                  <div className="flex items-start gap-2"><span className="text-hom-green mt-0.5">▸</span><span><strong className="text-hom-text">Data Forwarding</strong>: Rute EX→ID dan MEM→ID meminimalisasi pipeline bubbles.</span></div>
+                  <div className="flex items-start gap-2"><span className="text-hom-green mt-0.5">▸</span><span><strong className="text-hom-text">BRAM Sync</strong>: Pengawalan <code className="text-[10px] text-hom-accent px-1 bg-hom-panel rounded">imem_ce</code> untuk anti-loss instruksi saat ter-stall.</span></div>
+                </div>
               </div>
             </div>
-            
-            <div>
-              <div className="text-[10px] uppercase tracking-widest text-hom-muted mb-2 font-bold">Target Integrasi</div>
-              <div className="space-y-1.5 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-hom-muted">Status RTL</span>
-                  <span className="text-hom-green font-mono font-bold">174/174 PASS (No Lint Errors)</span>
+
+            {/* Row 2: Target Fabrikasi & Hisab */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl border border-hom-green/20 bg-hom-panel/40">
+                <div className="text-[10px] uppercase tracking-widest text-hom-muted mb-3 font-bold border-b border-hom-green/10 pb-2">
+                  Target Integrasi MPW & FPGA
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-hom-muted">MPW Fabrikasi</span>
-                  <span className="text-hom-accent font-mono">SkyWater SKY130 (Caravel)</span>
+                <div className="space-y-1.5 text-xs">
+                  <div className="flex justify-between"><span className="text-hom-muted">Status Validasi</span><span className="text-hom-green font-mono font-bold">174/174 PASS (Zero Bug)</span></div>
+                  <div className="flex justify-between"><span className="text-hom-muted">Chip Fabrikasi</span><span className="text-hom-accent font-mono">SkyWater SKY130 (Caravel)</span></div>
+                  <div className="flex justify-between"><span className="text-hom-muted">Protokol Akses</span><span className="text-hom-text/80 font-mono">Wishbone B4 Slave (8-register maps)</span></div>
+                  <div className="flex justify-between"><span className="text-hom-muted">Target FPGA</span><span className="text-hom-gold font-mono">Xilinx Arty A7-35T (100MHz)</span></div>
+                  <div className="flex justify-between"><span className="text-hom-muted">Sintesis Logic</span><span className="text-hom-text/80 font-mono">Single Clock Domain (0 CDC)</span></div>
+                  <div className="flex justify-between"><span className="text-hom-muted">Estimasi Resource</span><span className="text-hom-text/80 font-mono">LUT &lt; 85%, DSP48E1 &lt; 50%</span></div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-hom-muted">Target FPGA</span>
-                  <span className="text-hom-gold font-mono">Xilinx Arty A7-35T (100MHz)</span>
+              </div>
+              
+              <div className="p-4 rounded-xl border border-hom-green/20 bg-hom-panel/40">
+                <div className="text-[10px] uppercase tracking-widest text-hom-muted mb-3 font-bold border-b border-hom-green/10 pb-2">
+                  HISAB & EXM In-Silico Subsystem
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-hom-muted">Clock Domain</span>
-                  <span className="text-hom-text/80 font-mono">Single Domain (0 CDC)</span>
+                <div className="space-y-2 text-xs text-hom-text/80 leading-relaxed">
+                  <div className="flex items-start gap-2"><span className="text-hom-green mt-0.5">▸</span><span><strong className="text-hom-text">Nibble-Pack Serializer</strong>: <code className="text-[10px] text-hom-accent px-1 bg-hom-panel rounded">HPACK</code> mentransformasi vektor 18D menjadi standarisasi byte di hardware.</span></div>
+                  <div className="flex items-start gap-2"><span className="text-hom-green mt-0.5">▸</span><span><strong className="text-hom-text">IEEE 802.3 CRC32</strong>: Hardware digest generator kombinasional O(1) untuk lapis integritas frame HISAB.</span></div>
+                  <div className="flex items-start gap-2"><span className="text-hom-green mt-0.5">▸</span><span><strong className="text-hom-text">Guard Checker</strong>: Aturan geometri mutlak (EXM R1-R5) diproses mandiri di <code className="text-[10px] px-1 bg-hom-panel rounded">hcpu_guard.v</code>.</span></div>
                 </div>
               </div>
             </div>
