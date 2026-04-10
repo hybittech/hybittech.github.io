@@ -1,0 +1,25 @@
+; ============================================================================
+; test_distance.hasm — Nearest Neighbor Search
+; Finds the closest letter to Jim (index 5) in the codex space
+; Demonstrates HDIST instruction for distance computation
+; (c) 2026 HMCL
+; ============================================================================
+
+    ; Load Jim as reference
+    HLOAD H0, 5       ; H0 <- Jim
+
+    ; Compute distances to Ha(6) and Kha(7) — nearest neighbors
+    HLOAD H1, 6       ; H1 <- Ha
+    HDIST R0, H0, H1  ; R0 = ||Jim - Ha||^2
+    PRINT R0          ; Print distance to Ha
+
+    HLOAD H1, 7       ; H1 <- Kha
+    HDIST R0, H0, H1  ; R0 = ||Jim - Kha||^2
+    PRINT R0          ; Print distance to Kha
+
+    ; Compute distance to Ba(2) — should be much larger
+    HLOAD H1, 2       ; H1 <- Ba
+    HDIST R0, H0, H1  ; R0 = ||Jim - Ba||^2
+    PRINT R0          ; Print distance to Ba
+
+    HALT

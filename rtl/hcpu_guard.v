@@ -1,8 +1,8 @@
 // ============================================================================
-// HCPU Guard Checker — hcpu_guard.v
+// HCPU Guard Checker — hcpu_guard.v  (v2.0)
 // Hardware implementation of G1–G4 structural guards + T1–T2 topology
-// Single-cycle, fully combinational — sets GUARD flag in O(1)
-// (c) 2026 HMCL — HM-28-v1.2-HC18D
+// Single-cycle combinational with optional pipeline register
+// (c) 2026 HMCL — Hybit Technology
 // ============================================================================
 //
 // Guard checks (from Bab I, Matematika Hijaiyyah):
@@ -13,12 +13,18 @@
 //   T1: Ks > 0  ⇒  Qc ≥ 1
 //   T2: Kc > 0  ⇒  Qc ≥ 1
 //
-// All checks take one cycle. Result is a single PASS/FAIL bit.
+// PIPELINE_GUARD parameter:
+//   0 = fully combinational (1 cycle, default)
+//   1 = registered output   (2 cycles, breaks critical path)
 //
 
 `include "hcpu_pkg.vh"
 
-module hcpu_guard (
+module hcpu_guard #(
+    parameter PIPELINE_GUARD = 0  // 0 = combinational, 1 = registered
+)(
+    input  wire                clk,
+    input  wire                rst_n,
     input  wire [`HREG_W-1:0]  vec,         // 144-bit codex vector
     output wire                guard_pass,  // 1 = all guards pass
     output wire                g1_pass,
@@ -50,31 +56,74 @@ module hcpu_guard (
 
     // ── G1: A_N = Na + Nb + Nd ──────────────────────────────────
     wire [9:0] sum_n = na + nb + nd;
-    assign g1_pass = (a_n == sum_n[7:0]) && (sum_n[9:8] == 2'b00 || a_n == sum_n[7:0]);
+    wire g1_comb = (a_n == sum_n[7:0]) && (sum_n[9:8] == 2'b00 || a_n == sum_n[7:0]);
 
     // ── G2: A_K = Kp + Kx + Ks + Ka + Kc ───────────────────────
     wire [10:0] sum_k = kp + kx + ks + ka + kc;
-    assign g2_pass = (a_k == sum_k[7:0]);
+    wire g2_comb = (a_k == sum_k[7:0]);
 
     // ── G3: A_Q = Qp + Qx + Qs + Qa + Qc ───────────────────────
     wire [10:0] sum_q = qp + qx + qs + qa + qc;
-    assign g3_pass = (a_q == sum_q[7:0]);
+    wire g3_comb = (a_q == sum_q[7:0]);
 
     // ── G4: ρ = Θ̂ − U ≥ 0 ──────────────────────────────────────
     // U = Qx + Qs + Qa + 4 × Qc
     wire [10:0] u_val = qx + qs + qa + ({qc, 2'b00});  // qc << 2 = 4*qc
     // ρ = Θ̂ − U (signed: need to check if theta >= U)
-    assign g4_pass = (theta >= u_val[7:0]);
+    wire g4_comb = (theta >= u_val[7:0]);
 
     // ── T1: Ks > 0 ⇒ Qc ≥ 1 ────────────────────────────────────
-    assign t1_pass = (ks == 8'd0) || (qc >= 8'd1);
+    wire t1_comb = (ks == 8'd0) || (qc >= 8'd1);
 
     // ── T2: Kc > 0 ⇒ Qc ≥ 1 (Kaf is an exception) ──────────────
     wire is_kaf = (theta == 8'd2 && a_k == 8'd1 && a_q == 8'd0 && kc == 8'd1);
-    assign t2_pass = (kc == 8'd0) || (qc >= 8'd1) || is_kaf;
+    wire t2_comb = (kc == 8'd0) || (qc >= 8'd1) || is_kaf;
 
-    // ── Combined result ─────────────────────────────────────────
-    assign guard_pass = g1_pass & g2_pass & g3_pass & g4_pass
-                      & t1_pass & t2_pass;
+    // ── Combined combinational result ───────────────────────────
+    wire guard_pass_comb = g1_comb & g2_comb & g3_comb & g4_comb
+                         & t1_comb & t2_comb;
+
+    // ── Output: optional pipeline register ──────────────────────
+    generate
+        if (PIPELINE_GUARD) begin : gen_pipelined
+            // Registered output — breaks critical path at cost of 1 cycle latency
+            reg g1_r, g2_r, g3_r, g4_r, t1_r, t2_r, guard_r;
+            always @(posedge clk or negedge rst_n) begin
+                if (!rst_n) begin
+                    g1_r    <= 1'b0;
+                    g2_r    <= 1'b0;
+                    g3_r    <= 1'b0;
+                    g4_r    <= 1'b0;
+                    t1_r    <= 1'b0;
+                    t2_r    <= 1'b0;
+                    guard_r <= 1'b0;
+                end else begin
+                    g1_r    <= g1_comb;
+                    g2_r    <= g2_comb;
+                    g3_r    <= g3_comb;
+                    g4_r    <= g4_comb;
+                    t1_r    <= t1_comb;
+                    t2_r    <= t2_comb;
+                    guard_r <= guard_pass_comb;
+                end
+            end
+            assign g1_pass    = g1_r;
+            assign g2_pass    = g2_r;
+            assign g3_pass    = g3_r;
+            assign g4_pass    = g4_r;
+            assign t1_pass    = t1_r;
+            assign t2_pass    = t2_r;
+            assign guard_pass = guard_r;
+        end else begin : gen_combinational
+            // Fully combinational — single cycle
+            assign g1_pass    = g1_comb;
+            assign g2_pass    = g2_comb;
+            assign g3_pass    = g3_comb;
+            assign g4_pass    = g4_comb;
+            assign t1_pass    = t1_comb;
+            assign t2_pass    = t2_comb;
+            assign guard_pass = guard_pass_comb;
+        end
+    endgenerate
 
 endmodule

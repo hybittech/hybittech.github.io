@@ -1,0 +1,66 @@
+{
+    "DESIGN_NAME": "hcpu_mpw_top",
+    "DESIGN_IS_CORE": 0,
+
+    "VERILOG_FILES": [
+        "dir::../../hcpu_pkg.vh",
+        "dir::../../hcpu_top.v",
+        "dir::../../hcpu_fetch.v",
+        "dir::../../hcpu_decode.v",
+        "dir::../../hcpu_execute.v",
+        "dir::../../hcpu_memory.v",
+        "dir::../../hcpu_writeback.v",
+        "dir::../../hcpu_regfile.v",
+        "dir::../../hcpu_forward.v",
+        "dir::../../hcpu_controller.v",
+        "dir::../../hcpu_rom.v",
+        "dir::../../hcpu_guard.v",
+        "dir::../../hcpu_codex_alu.v",
+        "dir::../../hcpu_dataram.v",
+        "dir::../../hcpu_uart_tx.v",
+        "dir::hcpu_wb_adapter.v",
+        "dir::hcpu_mpw_top.v"
+    ],
+
+    "VERILOG_INCLUDE_DIRS": [
+        "dir::../../"
+    ],
+
+    "CLOCK_PORT": "wb_clk_i",
+    "CLOCK_PERIOD": 25.0,
+    "CLOCK_NET": "wb_clk_i",
+
+    "FP_SIZING": "absolute",
+    "DIE_AREA": "0 0 700 700",
+    "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
+
+    "PL_TARGET_DENSITY": 0.55,
+    "PL_BASIC_PLACEMENT": 0,
+
+    "GLB_RT_MAXLAYER": 5,
+    "RT_MAX_LAYER": "met4",
+
+    "FP_PDN_CORE_RING": 0,
+
+    "VDD_NETS": ["vccd1"],
+    "GND_NETS": ["vssd1"],
+    "DIODE_INSERTION_STRATEGY": 4,
+
+    "RUN_CVC": 1,
+    "RUN_LVS": 1,
+    "RUN_DRC": 1,
+
+    "SYNTH_STRATEGY": "AREA 0",
+    "SYNTH_READ_BLACKBOX_LIB": 1,
+
+    "pdk::sky130*": {
+        "SYNTH_MAX_FANOUT": 6,
+        "MAX_FANOUT_CONSTRAINT": 6,
+        "FP_CORE_UTIL": 40,
+        "CELL_PAD": 4,
+        "ROUTING_CORES": 4,
+        "scl::sky130_fd_sc_hd": {
+            "CLOCK_PERIOD": 25.0
+        }
+    }
+}

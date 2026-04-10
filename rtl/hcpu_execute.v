@@ -6,7 +6,9 @@
 
 `include "hcpu_pkg.vh"
 
-module hcpu_execute (
+module hcpu_execute #(
+    parameter USE_DSP = 1   // 1 = FPGA (DSP48), 0 = ASIC (shift-add)
+)(
     input  wire                    clk,
     input  wire                    rst_n,
 
@@ -52,6 +54,12 @@ module hcpu_execute (
     input  wire [`HREG_W-1:0]      calu_result_vec,
     input  wire [`XLEN-1:0]        calu_result_scl,
 
+    // ── HISAB serializer interface ───────────────────────────
+    input  wire [`XLEN-1:0]        hisab_pack0,
+    input  wire [`XLEN-1:0]        hisab_pack1,
+    input  wire [`XLEN-1:0]        hisab_pack2,
+    input  wire [`XLEN-1:0]        hisab_crc,
+
     // ── Output to Memory/Writeback ──────────────────────────────
     output reg  [7:0]              ex_opcode,
     output reg  [3:0]              ex_dst,
@@ -70,7 +78,15 @@ module hcpu_execute (
 
     // ── Branch output to Fetch ──────────────────────────────────
     output reg                     branch_taken,
-    output reg  [`XLEN-1:0]        branch_target
+    output reg  [`XLEN-1:0]        branch_target,
+
+    // ── Data RAM control (passed through to memory stage) ──────
+    input  wire                    id_mem_read,
+    input  wire                    id_mem_write,
+    output reg                     ex_mem_read,
+    output reg                     ex_mem_write,
+    output reg  [`DATA_ADDR_W-1:0] ex_mem_addr,    // Computed address
+    output reg  [`XLEN-1:0]        ex_mem_wdata    // Data to write
 );
 
     // ── Sign-extend immediate (for branches, ADDI) ──────────────
@@ -81,6 +97,14 @@ module hcpu_execute (
     reg [`XLEN-1:0] alu_result;
     reg [7:0]       alu_flags;
     reg             alu_flags_we;
+
+    // ── MUL: configurable multiplier (FPGA DSP or ASIC shift-add) ──
+    wire [`XLEN-1:0] mul_result;
+    hcpu_mul #(.USE_DSP(USE_DSP)) u_mul (
+        .a      (id_gpr_s1),
+        .b      (id_gpr_s2),
+        .result (mul_result)
+    );
 
     always @(*) begin
         alu_result   = {`XLEN{1'b0}};
@@ -93,7 +117,7 @@ module hcpu_execute (
             `OP_ADD:  alu_result = id_gpr_s1 + id_gpr_s2;
             `OP_ADDI: alu_result = id_gpr_s1 + imm_sext;
             `OP_SUB:  alu_result = id_gpr_s1 - id_gpr_s2;
-            `OP_MUL:  alu_result = id_gpr_s1 * id_gpr_s2;
+            `OP_MUL:  alu_result = mul_result;
             `OP_CMP, `OP_CMPI: begin
                 alu_flags_we = 1'b1;
                 // Compute S1 - S2/IMM for flag setting
@@ -132,9 +156,20 @@ module hcpu_execute (
             `OP_HCADD: codex_hvec = calu_result_vec;
             `OP_HNRM2: codex_gpr  = calu_result_scl;
             `OP_HDIST: codex_gpr  = calu_result_scl;
+            `OP_HPACK: codex_gpr  = hisab_pack0;  // HISAB: first 4 packed bytes
+            `OP_HCRC:  codex_gpr  = hisab_crc;    // HISAB: CRC32 digest
             default: ;
         endcase
     end
+
+    // ── Flags forwarding ────────────────────────────────────────
+    // Forward flags from the instruction currently being computed
+    // in EX (combinational), or from the EX pipeline register
+    // (previous instruction), or from the register file.
+    wire [7:0] forwarded_flags;
+    assign forwarded_flags = (alu_flags_we)  ? alu_flags     :  // CMP in EX now
+                             (ex_flags_we)   ? ex_flags_new  :  // CMP just left EX
+                             current_flags;                      // Register file
 
     // ── Branch resolution ───────────────────────────────────────
     always @(*) begin
@@ -146,10 +181,10 @@ module hcpu_execute (
             branch_target = imm_zext;  // Absolute jump
         end else if (id_is_branch) begin
             case (id_opcode)
-                `OP_JEQ:  branch_taken = current_flags[`FLAG_Z];
-                `OP_JNE:  branch_taken = ~current_flags[`FLAG_Z];
-                `OP_JGD:  branch_taken = current_flags[`FLAG_G];
-                `OP_JNGD: branch_taken = ~current_flags[`FLAG_G];
+                `OP_JEQ:  branch_taken = forwarded_flags[`FLAG_Z];
+                `OP_JNE:  branch_taken = ~forwarded_flags[`FLAG_Z];
+                `OP_JGD:  branch_taken = forwarded_flags[`FLAG_G];
+                `OP_JNGD: branch_taken = ~forwarded_flags[`FLAG_G];
                 default:  branch_taken = 1'b0;
             endcase
             branch_target = id_pc + imm_sext;  // Relative branch
@@ -173,16 +208,33 @@ module hcpu_execute (
             ex_is_push     <= 1'b0;
             ex_is_pop      <= 1'b0;
             ex_push_data   <= {`XLEN{1'b0}};
+            ex_mem_read    <= 1'b0;
+            ex_mem_write   <= 1'b0;
+            ex_mem_addr    <= {`DATA_ADDR_W{1'b0}};
+            ex_mem_wdata   <= {`XLEN{1'b0}};
         end else if (!stall) begin
             ex_opcode   <= id_opcode;
             ex_dst      <= id_dst;
-            ex_is_halt  <= id_is_halt;
             ex_is_print <= id_is_print;
             ex_is_push  <= id_is_push;
             ex_is_pop   <= id_is_pop;
 
+            // ── HCHECK: Runtime Invariant Traps ─────────────────
+            // [HC-01] HLOAD with invalid ROM index → HALT_ERR
+            //         ROM returns valid=0 for out-of-range indices.
+            //         Suppress H-Reg write and force halt.
+            if (id_is_codex && id_opcode == `OP_HLOAD && !rom_valid) begin
+                ex_is_halt  <= 1'b1;   // HALT_ERR
+                ex_gpr_we   <= 1'b0;   // No side effects
+                ex_hreg_we  <= 1'b0;
+                ex_mem_write <= 1'b0;
+            end else begin
+                ex_is_halt  <= id_is_halt;
+            end
+
             // GPR result selection
-            if (id_is_codex && (id_opcode == `OP_HNRM2 || id_opcode == `OP_HDIST))
+            if (id_is_codex && (id_opcode == `OP_HNRM2 || id_opcode == `OP_HDIST ||
+                                id_opcode == `OP_HPACK || id_opcode == `OP_HCRC))
                 ex_gpr_result <= codex_gpr;
             else if (id_is_pop)
                 ex_gpr_result <= {`XLEN{1'b0}};  // Filled by memory stage
@@ -214,6 +266,17 @@ module hcpu_execute (
 
             // Push data (GPR[S1] value)
             ex_push_data <= id_gpr_s1;
+
+            // Data RAM LOAD/STORE
+            ex_mem_read  <= id_mem_read;
+            ex_mem_write <= id_mem_write;
+            // LOAD: addr = GPR[S1] + IMM  (DST <- MEM[S1+IMM])
+            // STORE: addr = GPR[S2] + IMM  (MEM[S2+IMM] <- GPR[S1])
+            if (id_mem_write)
+                ex_mem_addr <= (id_gpr_s2 + imm_sext) & {{(`XLEN-`DATA_ADDR_W){1'b0}}, {`DATA_ADDR_W{1'b1}}};
+            else
+                ex_mem_addr <= (id_gpr_s1 + imm_sext) & {{(`XLEN-`DATA_ADDR_W){1'b0}}, {`DATA_ADDR_W{1'b1}}};
+            ex_mem_wdata <= id_gpr_s1;  // STORE writes GPR[S1]
         end
     end
 

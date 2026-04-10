@@ -17,10 +17,10 @@ Hardware implementation of the HCPU processor for the HyBIT paradigm.
                     │            │16 H-Reg │  │18-wide│  │ T1-T2   │ │
                     │            └─────────┘  └──────┘  └──────────┘ │
                     │                              │                  │
-                    │            ┌──────────┐  ┌───┴──┐  ┌────────┐  │
-                    │            │Master ROM│  │ UART │  │ Ctrl   │  │
-                    │            │28×144-bit│  │  TX  │  │Pipeline│  │
-                    │            └──────────┘  └──────┘  └────────┘  │
+                    │  ┌──────────┐  ┌──────────┐  ┌───┴──┐  ┌────┐ │
+                    │  │  HISAB   │  │Master ROM│  │ UART │  │Ctrl│ │
+                    │  │Pack+CRC32│  │28×144-bit│  │  TX  │  │Pipe│ │
+                    │  └──────────┘  └──────────┘  └──────┘  └────┘ │
                     └─────────────────────────────────────────────────┘
 ```
 
@@ -87,6 +87,7 @@ make wave_top
 | Compare/Branch | CMP, CMPI, JMP, JEQ, JNE, JGD, JNGD |
 | Stack | PUSH, POP |
 | Codex | HLOAD, HCADD, HGRD, HNRM2, HDIST |
+| HISAB | HPACK (nibble-pack), HCRC (CRC32 digest) |
 | I/O | PRINT (UART, blocking) |
 
 ## File Structure
@@ -98,15 +99,25 @@ rtl/
 ├── hcpu_fetch.v         # Fetch stage
 ├── hcpu_decode.v        # Decode stage
 ├── hcpu_execute.v       # Execute stage
-├── hcpu_memory.v        # Memory stage (stack)
+├── hcpu_memory.v        # Memory stage (stack + Data RAM)
 ├── hcpu_writeback.v     # Writeback stage
 ├── hcpu_regfile.v       # Register file
 ├── hcpu_codex_alu.v     # 18-wide vector ALU
 ├── hcpu_guard.v         # Hardware guard checker
+├── hcpu_hisab.v         # HISAB serializer (nibble-pack + CRC32)
 ├── hcpu_rom.v           # Master Table ROM
+├── hcpu_mul.v           # Configurable multiplier (DSP/shift-add)
+├── hcpu_forward.v       # Data forwarding unit
+├── hcpu_dataram.v       # Data RAM (4096 × 32-bit)
 ├── hcpu_uart_tx.v       # UART transmitter
 ├── hcpu_controller.v    # Pipeline controller
 ├── tb/                  # Testbenches
+│   ├── tb_rom.v         #   ROM verification
+│   ├── tb_guard.v       #   Guard checker
+│   ├── tb_codex_alu.v   #   Codex ALU
+│   ├── tb_hisab.v       #   HISAB pack + CRC32
+│   └── tb_hcpu_top.v    #   Integration (7 programs)
+├── programs/            # Assembly test programs
 ├── fpga/gowin/          # Gowin Tang Nano 9K
 ├── fpga/xilinx/         # Xilinx Arty A7
 ├── mpw/                 # MPW Shuttle plan

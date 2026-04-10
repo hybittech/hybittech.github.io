@@ -1,0 +1,17 @@
+; ============================================================================
+; test_loop.hasm — Arithmetic Loop Test
+; Counts from 0 to 10 using ADDI + CMP + JNE
+; Tests branching and scalar ALU
+; (c) 2026 HMCL
+; ============================================================================
+
+    MOVI R0, 0        ; R0 = counter (starts at 0)
+    MOVI R1, 10       ; R1 = limit
+
+loop:
+    ADDI R0, R0, 1    ; R0++
+    CMP  R0, R1       ; Compare R0 vs R1
+    JNE  loop         ; Repeat until R0 == 10
+
+    PRINT R0          ; Print final value (expected: 10)
+    HALT

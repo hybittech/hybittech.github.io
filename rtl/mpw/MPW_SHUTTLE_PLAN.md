@@ -158,13 +158,29 @@ This is well within Efabless Open MPW's user project area (~10 mm²).
 
 ```
 rtl/mpw/
-├── hcpu_mpw_top.v        ← Caravel-compatible wrapper
-├── hcpu_wb_adapter.v     ← Wishbone bus adapter (to be created)
-├── config.json           ← OpenLane configuration
-├── pin_order.cfg         ← Pin placement
-└── macro.cfg             ← Macro placement
+├── hcpu_mpw_top.v        ← Caravel user_project_wrapper (v2.0)   ✅ CREATED
+├── hcpu_wb_adapter.v     ← Wishbone B4 slave adapter               ✅ CREATED
+├── hcpu_firmware.h       ← C header for management SoC firmware    ✅ CREATED
+├── config.json           ← OpenLane synthesis configuration         ✅ CREATED
+├── pin_order.cfg         ← Pin placement order                      ✅ CREATED
+├── Makefile              ← Build targets (harden, lint, clean)      ✅ CREATED
+└── MPW_SHUTTLE_PLAN.md   ← This document
 ```
+
+### Wishbone Register Map
+
+| Offset | Register     | R/W | Description                              |
+|--------|-------------|-----|------------------------------------------|
+| 0x00   | CTRL        | W   | bit[0]: run, bit[1]: reset HCPU core     |
+| 0x04   | STATUS      | R   | bit[0]: halted, bit[1]: guard, bit[2]: running |
+| 0x08   | PROG_ADDR   | W   | Instruction address for loading (8-bit)  |
+| 0x0C   | PROG_DATA   | W   | Instruction word (32-bit), writes to IMEM|
+| 0x10   | GPR_SEL     | W   | Select GPR index for read-back           |
+| 0x14   | GPR_DATA    | R   | Value of GPR[GPR_SEL]                    |
+| 0x18   | CYCLE_CNT   | R   | Free-running cycle counter               |
+| 0x1C   | FLAGS       | R   | Current flag register                    |
 
 ---
 
-*© 2026 HMCL — HCPU MPW Shuttle Plan v1.0*
+*© 2026 HMCL — HCPU MPW Shuttle Plan v2.0 — Hybit Technology*
+

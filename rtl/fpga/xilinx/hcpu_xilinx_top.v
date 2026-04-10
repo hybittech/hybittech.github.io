@@ -51,6 +51,7 @@ module hcpu_xilinx_top (
     (* ram_style = "block" *)
     reg [`ILEN-1:0] imem [0:1023];
     wire [`CODE_ADDR_W-1:0] imem_addr;
+    wire                    imem_ce;
     reg  [`ILEN-1:0]        imem_data;
 
     initial begin
@@ -58,23 +59,30 @@ module hcpu_xilinx_top (
     end
 
     always @(posedge clk_50m) begin
-        imem_data <= imem[imem_addr[9:0]];
+        if (imem_ce)
+            imem_data <= imem[imem_addr[9:0]];
     end
 
     // ── HCPU core ───────────────────────────────────────────────
     wire halted_out, guard_led_out;
 
     hcpu_top #(
-        .CLK_HZ(50_000_000),
-        .BAUD  (115200)
+        .CLK_HZ (50_000_000),
+        .BAUD   (115200),
+        .USE_DSP(1)            // FPGA: use DSP48 multiplier
     ) u_hcpu (
-        .clk       (clk_50m),
-        .rst_n     (sys_rst_n),
-        .imem_addr (imem_addr),
-        .imem_data (imem_data),
-        .uart_tx   (uart_txd),
-        .halted    (halted_out),
-        .guard_led (guard_led_out)
+        .clk            (clk_50m),
+        .rst_n          (sys_rst_n),
+        .imem_addr      (imem_addr),
+        .imem_ce        (imem_ce),
+        .imem_data      (imem_data),
+        .uart_tx        (uart_txd),
+        .halted         (halted_out),
+        .guard_led      (guard_led_out),
+        // Debug port — unused on FPGA, tie off
+        .dbg_gpr_raddr  (5'd0),
+        .dbg_gpr_rdata  (),          // unconnected
+        .dbg_flags      ()           // unconnected
     );
 
     // ── LED mapping (active high) ───────────────────────────────

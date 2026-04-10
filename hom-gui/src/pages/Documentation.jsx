@@ -680,7 +680,8 @@ HOM/
 
 | Dokumen | Lokasi | Status |
 |---|---|---|
-| Arsitektur sistem | \`docs/architecture.md\` | UPDATED |
+| Arsitektur Sistem | \`docs/architecture.md\` | UPDATED |
+| Arsitektur RTL & Hardware | \`rtl/docs/Hybit Architecture (HCPU).md\` | EXACT |
 | Spesifikasi HC | \`docs/hc_language.md\` | Existing |
 | Spesifikasi H-ISA | \`docs/hisa_spec.md\` | UPDATED |
 | Spesifikasi CSGI | \`docs/csgi_spec.md\` | Existing |

@@ -33,15 +33,20 @@ module hcpu_regfile (
     input  wire [3:0]              hreg_waddr,
     input  wire [`HREG_W-1:0]      hreg_wdata,
 
-    // ── FLAGS ───────────────────────────────────────────────────
+    // ── FLAGS ─────────────────────────────────────────────────
     input  wire                    flags_we,
     input  wire [7:0]              flags_in,
     output wire [7:0]              flags_out,
 
-    // ── PC ──────────────────────────────────────────────────────
+    // ── PC ──────────────────────────────────────────────────
     input  wire                    pc_we,
     input  wire [`XLEN-1:0]        pc_in,
-    output wire [`XLEN-1:0]        pc_out
+    output wire [`XLEN-1:0]        pc_out,
+
+    // ── Debug / Wishbone read-back port (3rd GPR read) ─────────
+    input  wire [4:0]              dbg_gpr_raddr,
+    output wire [`XLEN-1:0]        dbg_gpr_rdata,
+    output wire [7:0]              dbg_flags
 );
 
     // ── GPR storage ─────────────────────────────────────────────
@@ -54,17 +59,21 @@ module hcpu_regfile (
     reg [7:0]        flags;
     reg [`XLEN-1:0]  pc;
 
-    // ── GPR read ────────────────────────────────────────────────
-    assign gpr_rdata1 = gpr[gpr_raddr1];
-    assign gpr_rdata2 = gpr[gpr_raddr2];
+    // ── GPR read (with transparent write-through) ───────────────
+    assign gpr_rdata1 = (gpr_we && gpr_waddr == gpr_raddr1) ? gpr_wdata : gpr[gpr_raddr1];
+    assign gpr_rdata2 = (gpr_we && gpr_waddr == gpr_raddr2) ? gpr_wdata : gpr[gpr_raddr2];
 
-    // ── H-Reg read ──────────────────────────────────────────────
-    assign hreg_rdata1 = hreg[hreg_raddr1];
-    assign hreg_rdata2 = hreg[hreg_raddr2];
+    // ── H-Reg read (with transparent write-through) ─────────────
+    assign hreg_rdata1 = (hreg_we && hreg_waddr == hreg_raddr1) ? hreg_wdata : hreg[hreg_raddr1];
+    assign hreg_rdata2 = (hreg_we && hreg_waddr == hreg_raddr2) ? hreg_wdata : hreg[hreg_raddr2];
 
-    // ── FLAGS / PC read ─────────────────────────────────────────
+    // ── FLAGS / PC read ───────────────────────────────────────
     assign flags_out = flags;
     assign pc_out    = pc;
+
+    // ── Debug read port (no write-through, read-only) ──────────
+    assign dbg_gpr_rdata = gpr[dbg_gpr_raddr];
+    assign dbg_flags     = flags;
 
     // ── Write logic (synchronous) ───────────────────────────────
     integer i;

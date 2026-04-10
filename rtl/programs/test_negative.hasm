@@ -1,0 +1,28 @@
+; ==============================================================================
+; Program 5: Negative Guard Audit (test_negative.hasm)
+; Verifies G1-G4 and T1-T2 protection using intentionally corrupted matrix (Idx 31)
+; Phase 1.5 - Hardware Design Verification Plan (DVP) [CDX-02]
+; ==============================================================================
+
+_start:
+    ; 1. Load an intentionally corrupt vector from ROM Index 31
+    HLOAD H0, 31
+
+    ; 2. Evaluate the Codex Guard (Sets FLAG_G to 1 if valid, 0 if corrupt)
+    HGRD H0
+
+    ; 3. If Guard is FALSE (0), the vector was correctly identified as corrupt.
+    ;    We branch to 'audit_pass'.
+    JNGD audit_pass
+
+audit_fail:
+    ; ERROR: The guard passed a corrupt vector!
+    MOVI R1, 404       ; Load Error Code '404'
+    PRINT R1
+    HALT
+
+audit_pass:
+    ; SUCCESS: The guard correctly flagged the vector as corrupt.
+    MOVI R1, 200       ; Load Success Code '200'
+    PRINT R1
+    HALT

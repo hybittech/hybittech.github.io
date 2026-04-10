@@ -1,0 +1,27 @@
+; ============================================================================
+; test_bsm.hasm — BSM (بسم) String Integral Computation
+; Computes I(BSM) = Ba + Sin + Mim and verifies guard + norm
+; Expected: Theta=10, ||BSM||^2 = 112
+; (c) 2026 HMCL
+; ============================================================================
+
+    ; Load three letters
+    HLOAD H0, 2       ; H0 <- Ba  (index 2)
+    HLOAD H1, 12      ; H1 <- Sin (index 12)
+    HLOAD H3, 24      ; H3 <- Mim (index 24)
+
+    ; Compute string integral: H2 = Ba + Sin
+    HCADD H2, H0, H1
+
+    ; H2 = H2 + Mim = Ba + Sin + Mim
+    HCADD H2, H2, H3
+
+    ; Guard check the result
+    HGRD  H2
+
+    ; Compute squared norm
+    HNRM2 R0, H2     ; R0 = ||BSM||^2
+
+    ; Print result (expected: 112)
+    PRINT R0
+    HALT

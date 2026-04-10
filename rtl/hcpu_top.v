@@ -1,11 +1,12 @@
 // ============================================================================
 // HCPU Top-Level — hcpu_top.v
-// Hijaiyyah Core Processing Unit — 5-stage pipeline
-// (c) 2026 HMCL — HM-28-v1.2-HC18D
+// Hijaiyyah Core Processing Unit — 5-stage pipeline with forwarding
+// (c) 2026 HMCL — HM-28-v1.2-HC18D / Tier 1.5
 // ============================================================================
 //
 // Architecture: Fetch → Decode → Execute → Memory → Writeback
-// Stall: PRINT blocking, future multi-cycle ops
+// Forwarding: EX→ID, MEM→ID (GPR + H-Reg bypass)
+// Stall: PRINT blocking
 // Flush: Taken branch (1-cycle penalty)
 //
 // External interfaces:
@@ -18,20 +19,27 @@
 `include "hcpu_pkg.vh"
 
 module hcpu_top #(
-    parameter CLK_HZ = `SYS_CLK_HZ,
-    parameter BAUD   = `UART_BAUD
+    parameter CLK_HZ  = `SYS_CLK_HZ,
+    parameter BAUD    = `UART_BAUD,
+    parameter USE_DSP = 1  // 1 = FPGA (DSP48), 0 = ASIC (shift-add)
 )(
     input  wire        clk,
     input  wire        rst_n,
 
     // ── Instruction memory interface ────────────────────────────
     output wire [`CODE_ADDR_W-1:0] imem_addr,
+    output wire                    imem_ce,       // BRAM clock-enable
     input  wire [`ILEN-1:0]        imem_data,
 
     // ── External I/O ────────────────────────────────────────────
     output wire        uart_tx,
     output wire        halted,
-    output wire        guard_led      // Current GUARD flag state
+    output wire        guard_led,     // Current GUARD flag state
+
+    // ── Debug / Wishbone GPR read-back ──────────────────────────
+    input  wire [4:0]  dbg_gpr_raddr,
+    output wire [`XLEN-1:0] dbg_gpr_rdata,
+    output wire [7:0]  dbg_flags
 );
 
     // ════════════════════════════════════════════════════════════
@@ -39,7 +47,9 @@ module hcpu_top #(
     // ════════════════════════════════════════════════════════════
 
     // Pipeline control
-    wire pipe_stall, pipe_flush;
+    wire pc_stall, id_stall, ex_stall;
+    wire if_flush, id_flush;
+    wire load_use_hazard, store_load_hazard;
     wire branch_taken_w;
     wire [`XLEN-1:0] branch_target_w;
 
@@ -58,6 +68,10 @@ module hcpu_top #(
     wire id_is_branch, id_is_jump, id_is_codex;
     wire id_is_halt, id_is_print, id_is_push, id_is_pop;
 
+    // Forwarded values (from forwarding unit)
+    wire [`XLEN-1:0]   fwd_gpr_s1, fwd_gpr_s2;
+    wire [`HREG_W-1:0] fwd_hreg_s1, fwd_hreg_s2;
+
     // Execute → Memory
     wire [7:0]  ex_opcode;
     wire [3:0]  ex_dst;
@@ -69,6 +83,9 @@ module hcpu_top #(
     wire [`XLEN-1:0] ex_print_data;
     wire ex_is_push, ex_is_pop;
     wire [`XLEN-1:0] ex_push_data;
+    wire ex_mem_read, ex_mem_write;
+    wire [`DATA_ADDR_W-1:0] ex_mem_addr;
+    wire [`XLEN-1:0] ex_mem_wdata;
 
     // Memory → Writeback
     wire [3:0]  mem_dst;
@@ -115,12 +132,17 @@ module hcpu_top #(
     reg  uart_start;
     reg  [7:0] uart_data;
 
+    // Data RAM
+    wire                    dram_we;
+    wire [`DATA_ADDR_W-1:0] dram_addr;
+    wire [`XLEN-1:0]        dram_wdata;
+    wire [`XLEN-1:0]        dram_rdata;
+
     // ════════════════════════════════════════════════════════════
     //  UART TX — print handling
     // ════════════════════════════════════════════════════════════
 
     // Simple byte-by-byte decimal print FSM
-    // Converts GPR value to ASCII digits and sends via UART
     reg [2:0] print_state;
     reg [`XLEN-1:0] print_val;
     reg [3:0] digit_cnt;
@@ -149,7 +171,7 @@ module hcpu_top #(
             case (print_state)
                 P_IDLE: begin
                     print_active <= 1'b0;
-                    if (ex_is_print && !pipe_stall) begin
+                    if (ex_is_print && !ex_stall) begin
                         print_val    <= ex_print_data;
                         print_active <= 1'b1;
                         digit_cnt    <= 4'd0;
@@ -158,7 +180,6 @@ module hcpu_top #(
                 end
 
                 P_CONV: begin
-                    // Convert value to ASCII digits (reverse order)
                     if (print_val == 0 && digit_cnt == 0) begin
                         digits[0]   <= 8'h30;  // '0'
                         digit_cnt   <= 4'd1;
@@ -169,7 +190,6 @@ module hcpu_top #(
                         print_val         <= print_val / 10;
                         digit_cnt         <= digit_cnt + 1;
                     end else begin
-                        // All digits extracted, start sending (MSB first)
                         digit_idx   <= digit_cnt - 1;
                         print_state <= P_SEND;
                     end
@@ -195,7 +215,6 @@ module hcpu_top #(
                 end
 
                 P_NEWLN: begin
-                    // Send newline
                     if (!uart_busy) begin
                         uart_data   <= 8'h0A;  // '\n'
                         uart_start  <= 1'b1;
@@ -216,11 +235,12 @@ module hcpu_top #(
     hcpu_fetch u_fetch (
         .clk            (clk),
         .rst_n          (rst_n),
-        .stall          (pipe_stall),
-        .flush          (pipe_flush),
+        .stall          (pc_stall),
+        .flush          (if_flush),
         .branch_taken   (branch_taken_w),
         .branch_target  (branch_target_w),
         .imem_addr      (imem_addr),
+        .imem_ce        (imem_ce),
         .imem_data      (imem_data),
         .if_instruction (if_instruction),
         .if_pc          (if_pc)
@@ -230,8 +250,14 @@ module hcpu_top #(
     hcpu_decode u_decode (
         .clk            (clk),
         .rst_n          (rst_n),
-        .stall          (pipe_stall),
-        .flush          (pipe_flush),
+        .stall          (id_stall),
+        .flush             (id_flush),
+        .ex_mem_read       (ex_mem_read),
+        .ex_mem_write      (ex_mem_write),
+        .ex_dst            (ex_dst),
+        .ex_mem_addr       (ex_mem_addr),
+        .load_use_hazard   (load_use_hazard),
+        .store_load_hazard (store_load_hazard),
         .if_instruction (if_instruction),
         .if_pc          (if_pc),
         .gpr_raddr1     (gpr_raddr1),
@@ -265,21 +291,46 @@ module hcpu_top #(
         .id_is_pop      (id_is_pop)
     );
 
+    // ── Forwarding Unit ─────────────────────────────────────────
+    hcpu_forward u_forward (
+        .id_s1          (id_s1),
+        .id_s2          (id_s2),
+        .rf_gpr_s1      (id_gpr_s1),
+        .rf_gpr_s2      (id_gpr_s2),
+        .rf_hreg_s1     (id_hreg_s1),
+        .rf_hreg_s2     (id_hreg_s2),
+        .ex_gpr_we      (ex_gpr_we),
+        .ex_hreg_we     (ex_hreg_we),
+        .ex_dst         (ex_dst),
+        .ex_gpr_result  (ex_gpr_result),
+        .ex_hreg_result (ex_hreg_result),
+        .mem_gpr_we     (mem_gpr_we),
+        .mem_hreg_we    (mem_hreg_we),
+        .mem_dst        (mem_dst),
+        .mem_gpr_result (mem_gpr_result),
+        .mem_hreg_result(mem_hreg_result),
+        .fwd_gpr_s1     (fwd_gpr_s1),
+        .fwd_gpr_s2     (fwd_gpr_s2),
+        .fwd_hreg_s1    (fwd_hreg_s1),
+        .fwd_hreg_s2    (fwd_hreg_s2)
+    );
+
     // ── Execute ─────────────────────────────────────────────────
-    hcpu_execute u_execute (
+    hcpu_execute #(.USE_DSP(USE_DSP)) u_execute (
         .clk            (clk),
         .rst_n          (rst_n),
-        .stall          (pipe_stall),
-        .flush          (pipe_flush),
+        .stall          (ex_stall),
+        .flush          (1'b0),
         .id_opcode      (id_opcode),
         .id_dst         (id_dst),
         .id_s1          (id_s1),
         .id_s2          (id_s2),
         .id_imm         (id_imm),
-        .id_gpr_s1      (id_gpr_s1),
-        .id_gpr_s2      (id_gpr_s2),
-        .id_hreg_s1     (id_hreg_s1),
-        .id_hreg_s2     (id_hreg_s2),
+        // Use FORWARDED values instead of raw register reads
+        .id_gpr_s1      (fwd_gpr_s1),
+        .id_gpr_s2      (fwd_gpr_s2),
+        .id_hreg_s1     (fwd_hreg_s1),
+        .id_hreg_s2     (fwd_hreg_s2),
         .id_pc          (id_pc),
         .id_gpr_we      (id_gpr_we),
         .id_hreg_we     (id_hreg_we),
@@ -301,6 +352,11 @@ module hcpu_top #(
         .calu_src2      (calu_src2),
         .calu_result_vec(calu_result_vec),
         .calu_result_scl(calu_result_scl),
+        // HISAB serializer
+        .hisab_pack0    (hisab_pack0),
+        .hisab_pack1    (hisab_pack1),
+        .hisab_pack2    (hisab_pack2),
+        .hisab_crc      (hisab_crc),
         .ex_opcode      (ex_opcode),
         .ex_dst         (ex_dst),
         .ex_gpr_result  (ex_gpr_result),
@@ -316,14 +372,21 @@ module hcpu_top #(
         .ex_is_pop      (ex_is_pop),
         .ex_push_data   (ex_push_data),
         .branch_taken   (branch_taken_w),
-        .branch_target  (branch_target_w)
+        .branch_target  (branch_target_w),
+        // Data RAM
+        .id_mem_read    (id_mem_read),
+        .id_mem_write   (id_mem_write),
+        .ex_mem_read    (ex_mem_read),
+        .ex_mem_write   (ex_mem_write),
+        .ex_mem_addr    (ex_mem_addr),
+        .ex_mem_wdata   (ex_mem_wdata)
     );
 
     // ── Memory ──────────────────────────────────────────────────
     hcpu_memory u_memory (
         .clk            (clk),
         .rst_n          (rst_n),
-        .stall          (pipe_stall),
+        .stall          (ex_stall),
         .ex_opcode      (ex_opcode),
         .ex_dst         (ex_dst),
         .ex_gpr_result  (ex_gpr_result),
@@ -336,6 +399,14 @@ module hcpu_top #(
         .ex_is_push     (ex_is_push),
         .ex_is_pop      (ex_is_pop),
         .ex_push_data   (ex_push_data),
+        .ex_mem_read    (ex_mem_read),
+        .ex_mem_write   (ex_mem_write),
+        .ex_mem_addr    (ex_mem_addr),
+        .ex_mem_wdata   (ex_mem_wdata),
+        .dram_we        (dram_we),
+        .dram_addr      (dram_addr),
+        .dram_wdata     (dram_wdata),
+        .dram_rdata     (dram_rdata),
         .mem_dst        (mem_dst),
         .mem_gpr_result (mem_gpr_result),
         .mem_hreg_result(mem_hreg_result),
@@ -390,7 +461,11 @@ module hcpu_top #(
         .flags_out   (flags_out),
         .pc_we       (1'b0),
         .pc_in       ({`XLEN{1'b0}}),
-        .pc_out      (pc_out)
+        .pc_out      (pc_out),
+        // Debug / Wishbone read-back
+        .dbg_gpr_raddr (dbg_gpr_raddr),
+        .dbg_gpr_rdata (dbg_gpr_rdata),
+        .dbg_flags     (dbg_flags)
     );
 
     // ── Master Table ROM ────────────────────────────────────────
@@ -401,7 +476,9 @@ module hcpu_top #(
     );
 
     // ── Guard checker ───────────────────────────────────────────
-    hcpu_guard u_guard (
+    hcpu_guard #(.PIPELINE_GUARD(0)) u_guard (
+        .clk        (clk),
+        .rst_n      (rst_n),
         .vec        (guard_vec),
         .guard_pass (guard_pass),
         .g1_pass    (g1),
@@ -422,6 +499,25 @@ module hcpu_top #(
         .done       (calu_done)
     );
 
+    // ── HISAB Serializer ─────────────────────────────────────────
+    wire [`XLEN-1:0] hisab_pack0, hisab_pack1, hisab_pack2;
+    wire [`XLEN-1:0] hisab_crc;
+    wire [7:0]       hisab_guard_status;
+
+    hcpu_hisab u_hisab (
+        .op          (2'd0),             // Always HPACK mode (CRC is computed alongside)
+        .vec_in      (fwd_hreg_s1),      // Forwarded H-Reg S1
+        .gpr_s1      (fwd_gpr_s1),
+        .gpr_s2      (fwd_gpr_s2),
+        .extra_byte  (8'd0),
+        .pack_word0  (hisab_pack0),
+        .pack_word1  (hisab_pack1),
+        .pack_word2  (hisab_pack2),
+        .guard_status(hisab_guard_status),
+        .crc_out     (hisab_crc),
+        .done        ()                  // Always 1 (single-cycle)
+    );
+
     // ── UART TX ─────────────────────────────────────────────────
     hcpu_uart_tx #(
         .CLK_HZ (CLK_HZ),
@@ -435,17 +531,31 @@ module hcpu_top #(
         .tx_busy  (uart_busy)
     );
 
+    // ── Data RAM ────────────────────────────────────────────────
+    hcpu_dataram u_dataram (
+        .clk   (clk),
+        .we    (dram_we),
+        .addr  (dram_addr),
+        .wdata (dram_wdata),
+        .rdata (dram_rdata)
+    );
+
     // ── Controller ──────────────────────────────────────────────
     hcpu_controller u_controller (
-        .clk          (clk),
-        .rst_n        (rst_n),
-        .ex_is_print  (print_active),
-        .branch_taken (branch_taken_w),
-        .wb_halt      (wb_halt),
-        .uart_busy    (uart_busy),
-        .pipe_stall   (pipe_stall),
-        .pipe_flush   (pipe_flush),
-        .halted       (halted)
+        .clk             (clk),
+        .rst_n           (rst_n),
+        .ex_is_print     (print_active),
+        .branch_taken      (branch_taken_w),
+        .wb_halt           (wb_halt),
+        .load_use_hazard   (load_use_hazard),
+        .store_load_hazard (store_load_hazard),
+        .uart_busy         (uart_busy),
+        .pc_stall        (pc_stall),
+        .id_stall        (id_stall),
+        .ex_stall        (ex_stall),
+        .if_flush        (if_flush),
+        .id_flush        (id_flush),
+        .halted          (halted)
     );
 
     // ── Guard LED output ────────────────────────────────────────

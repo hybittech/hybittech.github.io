@@ -1,0 +1,57 @@
+# ============================================================================
+# HCPU Yosys Synthesis Script — synth_hcpu.ys
+# Open-source synthesis for area/timing estimation (SKY130 or generic)
+# (c) 2026 HMCL — Hybit Technology
+# ============================================================================
+#
+# Usage:
+#   yosys -s synth_hcpu.ys          # Generic gate-level synthesis
+#   yosys -s synth_hcpu.ys -D SKY130  # With SKY130 cell library
+#
+# Output:
+#   - hcpu_synth_report.txt  — Area, cell count, timing estimate
+#   - hcpu_synth.json        — Netlist (for nextpnr or OpenLane)
+#
+
+# ── Read RTL sources ─────────────────────────────────────────────
+verilog_defaults -add -I../../
+read_verilog -sv ../../hcpu_pkg.vh
+read_verilog ../../hcpu_top.v
+read_verilog ../../hcpu_fetch.v
+read_verilog ../../hcpu_decode.v
+read_verilog ../../hcpu_execute.v
+read_verilog ../../hcpu_mul.v
+read_verilog ../../hcpu_memory.v
+read_verilog ../../hcpu_writeback.v
+read_verilog ../../hcpu_regfile.v
+read_verilog ../../hcpu_forward.v
+read_verilog ../../hcpu_controller.v
+read_verilog ../../hcpu_rom.v
+read_verilog ../../hcpu_guard.v
+read_verilog ../../hcpu_codex_alu.v
+read_verilog ../../hcpu_dataram.v
+read_verilog ../../hcpu_uart_tx.v
+
+# ── Elaborate top module ─────────────────────────────────────────
+hierarchy -top hcpu_top -chparam USE_DSP 0
+
+# ── Generic synthesis ────────────────────────────────────────────
+synth -top hcpu_top -flatten
+
+# ── Technology mapping ───────────────────────────────────────────
+# Map to generic gate library (NAND/NOR/DFF)
+abc -g AND,NAND,OR,NOR,XOR,XNOR,MUX,AOI3,OAI3
+
+# ── Reports ──────────────────────────────────────────────────────
+tee -o hcpu_synth_report.txt stat
+tee -a hcpu_synth_report.txt ltp -noff
+
+# ── Export netlist ───────────────────────────────────────────────
+write_json hcpu_synth.json
+write_verilog hcpu_synth_netlist.v
+
+# ── Summary ──────────────────────────────────────────────────────
+log "============================================"
+log " HCPU Yosys Synthesis Complete"
+log " See hcpu_synth_report.txt for area/timing"
+log "============================================"

@@ -60,16 +60,21 @@ module hcpu_gowin_top (
     wire halted_out, guard_led_out;
 
     hcpu_top #(
-        .CLK_HZ(50_000_000),
-        .BAUD  (115200)
+        .CLK_HZ (50_000_000),
+        .BAUD   (115200),
+        .USE_DSP(1)            // FPGA: use DSP multiplier
     ) u_hcpu (
-        .clk       (clk_50m),
-        .rst_n     (sys_rst_n),
-        .imem_addr (imem_addr),
-        .imem_data (imem_data),
-        .uart_tx   (uart_txd),
-        .halted    (halted_out),
-        .guard_led (guard_led_out)
+        .clk            (clk_50m),
+        .rst_n          (sys_rst_n),
+        .imem_addr      (imem_addr),
+        .imem_data      (imem_data),
+        .uart_tx        (uart_txd),
+        .halted         (halted_out),
+        .guard_led      (guard_led_out),
+        // Debug port — unused on FPGA, tie off
+        .dbg_gpr_raddr  (5'd0),
+        .dbg_gpr_rdata  (),
+        .dbg_flags      ()
     );
 
     // ── LED mapping (active low) ────────────────────────────────

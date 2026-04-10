@@ -196,6 +196,13 @@ module hcpu_rom (
                                8'd1,8'd0,8'd0,8'd0,8'd0,8'd0,8'd2,8'd0,
                                8'd0,8'd3};
 
+            // ── Index 31: Test Negative (Corrupt Vector) ──
+            // Intentionally fails G4 (Theta=1, Qc=2 -> U=8. 1 >= 8 is FALSE)
+            // Used strictly for Hardware Pipeline Validation checks.
+            5'd31: data_out = {8'd0,8'd0,8'd0,8'd0,8'd0,8'd0,8'd0,8'd0,
+                               8'd0,8'd0,8'd0,8'd0,8'd0,8'd2,8'd0,8'd0,
+                               8'd0,8'd1};
+
             default: begin
                 data_out = {`HREG_W{1'b0}};
                 valid    = 1'b0;

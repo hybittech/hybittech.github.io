@@ -96,6 +96,8 @@
 `define OP_JNGD         8'h2A       // if G=0: PC ← PC + sign_ext(IMM)
 
 // Memory (0x30–0x3F)
+`define OP_LOAD         8'h30       // DST ← DataRAM[S1 + IMM]
+`define OP_STORE        8'h31       // DataRAM[S2 + IMM] ← S1
 `define OP_PUSH         8'h32       // stack ← S1
 `define OP_POP          8'h33       // DST ← stack
 
@@ -105,6 +107,11 @@
 `define OP_HGRD         8'h60       // Guard G1–G4,T1–T2 on H[S1] → GUARD flag
 `define OP_HNRM2        8'h06       // GPR[DST] ← ‖H[S1]‖²₁₄
 `define OP_HDIST        8'h07       // GPR[DST] ← ‖H[S1]−H[S2]‖²₁₄
+
+// HISAB Protocol Operations (0x50–0x5F)
+`define OP_HPACK        8'h50       // HISAB nibble-pack: H[S1] → GPR[DST]=pack[31:0]
+                                    //   DST+1=pack[63:32], DST+2=byte8+guard
+`define OP_HCRC         8'h51       // HISAB CRC32 digest: GPR[DST] ← CRC32(LETTER frame of H[S1])
 
 // I/O (0xA0–0xAF)
 `define OP_PRINT        8'hA0       // UART print GPR[S1] as decimal

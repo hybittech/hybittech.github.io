@@ -1,0 +1,22 @@
+; ============================================================================
+; test_guard.hasm — Load all 28 letters with guard verification
+; Tests HLOAD + HGRD for every letter in the Master Table
+; (c) 2026 HMCL
+; ============================================================================
+
+    MOVI R0, 0        ; R0 = pass counter
+    MOVI R1, 28       ; R1 = total letters
+    MOVI R2, 1        ; R2 = current letter index
+
+loop:
+    HLOAD H0, R2      ; H0 <- ROM[R2]
+    HGRD  H0          ; Guard check H0
+    JNGD  fail        ; If guard fails, jump to fail
+    ADDI  R0, R0, 1   ; pass_count++
+fail:
+    ADDI  R2, R2, 1   ; index++
+    CMP   R2, R1      ; Compare index vs 28
+    JNE   loop        ; Loop if not done
+
+    PRINT R0          ; Print pass count (should be 28)
+    HALT

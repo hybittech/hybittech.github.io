@@ -1,8 +1,7 @@
 // ============================================================================
 // HCPU Memory Stage — hcpu_memory.v
-// Stack operations (PUSH/POP) for Fase 1
-// Data RAM load/store reserved for future expansion
-// (c) 2026 HMCL — HM-28-v1.2-HC18D
+// Stack operations (PUSH/POP) + Data RAM (LOAD/STORE)
+// (c) 2026 HMCL — HM-28-v1.2-HC18D / Tier 1.5
 // ============================================================================
 
 `include "hcpu_pkg.vh"
@@ -28,6 +27,18 @@ module hcpu_memory (
     input  wire                    ex_is_pop,
     input  wire [`XLEN-1:0]        ex_push_data,
 
+    // ── Data RAM interface (from execute) ────────────────────────
+    input  wire                    ex_mem_read,
+    input  wire                    ex_mem_write,
+    input  wire [`DATA_ADDR_W-1:0] ex_mem_addr,
+    input  wire [`XLEN-1:0]        ex_mem_wdata,
+
+    // ── Data RAM port (directly connected to hcpu_dataram) ──────
+    output wire                    dram_we,
+    output wire [`DATA_ADDR_W-1:0] dram_addr,
+    output wire [`XLEN-1:0]        dram_wdata,
+    input  wire [`XLEN-1:0]        dram_rdata,
+
     // ── Output to Writeback ─────────────────────────────────────
     output reg  [3:0]              mem_dst,
     output reg  [`XLEN-1:0]        mem_gpr_result,
@@ -43,13 +54,23 @@ module hcpu_memory (
     reg [`XLEN-1:0] stack [0:`STACK_DEPTH-1];
     reg [7:0]       sp;  // Stack pointer (0 = empty)
 
-    // ── Stack operation result ──────────────────────────────────
-    reg [`XLEN-1:0] pop_data;
+    // ── Data RAM interface ──────────────────────────────────────
+    assign dram_we    = ex_mem_write && !stall;
+    assign dram_addr  = ex_mem_addr;
+    assign dram_wdata = ex_mem_wdata;
 
+    // ── HCHECK: Stack fault detection ────────────────────────
+    // [HC-02] Stack overflow:  PUSH when sp >= STACK_DEPTH
+    // [HC-03] Stack underflow: POP  when sp == 0
+    wire stack_overflow  = ex_is_push && (sp >= `STACK_DEPTH);
+    wire stack_underflow = ex_is_pop  && (sp == 8'd0);
+    wire hcheck_fault    = stack_overflow || stack_underflow;
+
+    // ── Stack operations ────────────────────────────────────────
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             sp <= 8'd0;
-        end else if (!stall) begin
+        end else if (!stall && !hcheck_fault) begin
             if (ex_is_push && sp < `STACK_DEPTH) begin
                 stack[sp] <= ex_push_data;
                 sp        <= sp + 1;
@@ -81,11 +102,14 @@ module hcpu_memory (
             mem_hreg_we     <= ex_hreg_we;
             mem_flags_new   <= ex_flags_new;
             mem_flags_we    <= ex_flags_we;
-            mem_is_halt     <= ex_is_halt;
+            // HCHECK: fault from stack overflow/underflow → HALT_ERR
+            mem_is_halt     <= ex_is_halt || hcheck_fault;
 
-            // GPR result: override with stack data for POP
+            // GPR result: override with stack data for POP, RAM data for LOAD
             if (ex_is_pop)
                 mem_gpr_result <= stack_top;
+            else if (ex_mem_read)
+                mem_gpr_result <= dram_rdata;
             else
                 mem_gpr_result <= ex_gpr_result;
         end

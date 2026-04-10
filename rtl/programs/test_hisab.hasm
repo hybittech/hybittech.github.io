@@ -1,0 +1,31 @@
+; ============================================================================
+; test_hisab.hasm — HISAB Protocol Test Program
+; Tests HPACK (nibble-packing) and HCRC (CRC32 digest) instructions
+; (c) 2026 HMCL — HM-28-v1.2-HC18D
+; ============================================================================
+;
+; Expected output on UART:
+;   pack_word0 of Ba  = 65824  (0x00010120 decimal)
+;   CRC32 of Ba       = 2586113484  (0x9A3115CC)
+;
+; Registers used:
+;   H0 = letter vector
+;   R0 = pack_word0 result
+;   R1 = CRC32 result
+;
+
+; ── Load Ba (ROM index 2) ─────────────────────────────
+HLOAD H0, 2            ; H0 <- Master Table[2] = Ba
+
+; ── HISAB nibble-pack ─────────────────────────────────
+HPACK R0, H0           ; R0 <- pack_word0 (nibble-packed bytes 0-3)
+
+; ── HISAB CRC32 digest ───────────────────────────────
+HCRC  R1, H0           ; R1 <- CRC32(LETTER frame of H0)
+
+; ── Print results ─────────────────────────────────────
+PRINT R0                ; Print pack_word0 of Ba
+PRINT R1                ; Print CRC32 of Ba
+
+; ── Done ──────────────────────────────────────────────
+HALT
